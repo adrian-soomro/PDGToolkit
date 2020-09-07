@@ -38,13 +38,14 @@ class Grid {
     }
 }
 
-var grid = new Grid(500, 500, 10);
-grid.setupCanvas();
-grid.displayCells();
+
 
 httpGetAsync("http://localhost:3000/data", (res) => { 
     console.log(JSON.parse(res))
-    data = JSON.parse(res) 
+    data = JSON.parse(res)
+    var grid = new Grid(data.dungeon.x, data.dungeon.y, data.dungeon.cellSize);
+    grid.setupCanvas();
+    grid.displayCells();
     });
 
 function httpGetAsync(theUrl, callback)
