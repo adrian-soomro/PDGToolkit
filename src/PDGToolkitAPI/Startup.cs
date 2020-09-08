@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PDGToolkitAPI.foo;
+using PDGToolkitAPI.Application;
+using PDGToolkitAPI.Application.Serialisers;
 
 namespace PDGToolkitAPI
 {
@@ -9,7 +10,8 @@ namespace PDGToolkitAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(GetSettings());
-            services.AddTransient<IBar, Bar>();
+            services.AddTransient<IGenerator, RandomGenerator>();
+            services.AddTransient<ISerialiser, JsonSerialiser>();
         }
 
         private static IConfiguration GetConfiguration()

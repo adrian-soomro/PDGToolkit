@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using PDGToolkitAPI.foo;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using PDGToolkitAPI.Application;
+using PDGToolkitAPI.Application.Serialisers;
 
 namespace PDGToolkitAPI
 {
@@ -12,8 +14,11 @@ namespace PDGToolkitAPI
             startup.ConfigureServices(services);
             var serviceProvider = services.BuildServiceProvider();
 
-            var bar = serviceProvider.GetService<IBar>();
-            var runner = new Runner(bar);
+            var generator = serviceProvider.GetService<IGenerator>();
+
+
+            var seriliaser = serviceProvider.GetService<ISerialiser>();
+            var runner = new Runner(generator, seriliaser);
             
             runner.Run();
         }
@@ -22,16 +27,19 @@ namespace PDGToolkitAPI
 
     public sealed class Runner
     {
-        private readonly IBar bar;
-
-        public Runner(IBar bar)
+        private readonly IGenerator generator;
+        private readonly ISerialiser serialiser;
+        public Runner(IGenerator generator, ISerialiser serialiser)
         {
-            this.bar = bar;
+            this.generator = generator;
+            this.serialiser = serialiser;
         }
 
         public void Run()
         {
-           bar.DoSomething();
+            var grid = generator.GenerateGrid();
+            var output = serialiser.Serialise(grid);
+            Console.WriteLine(output);
         }
     }
 }
