@@ -4,6 +4,12 @@ const colours = {
     RED: 'rgb(204,0,0)',
 }
 
+const setColour = (tileType) => ({
+    "Floor": colours.GREY,
+    "Wall": colours.BLACK,
+    "Obstacle": colours.RED
+  })[tileType]
+
 class Cell {
     constructor(x, y, cellSize, colour) {
         this.x = x;
@@ -26,27 +32,15 @@ class Grid {
         canvas.width= this.width;
     }
 
-    displayCells() {
+    renderDungeon(tiles) {
         var ctx = canvas.getContext("2d");
 
-        for (var y=0; y<this.height; y+=this.cellSize) {
-            for (var x=0; x<this.width; x+=this.cellSize) {
-                ctx.fillStyle = colours.GREY;
-                ctx.fillRect(x, y, this.cellSize, this.cellSize);
-            }
-        }
+        tiles.forEach(tile => {
+            ctx.fillStyle = setColour(tile.Type.Name);
+            ctx.fillRect(tile.Position.X * this.cellSize, tile.Position.Y * this.cellSize, this.cellSize, this.cellSize);
+        });
     }
 }
-
-
-
-httpGetAsync("http://localhost:3000/data", (res) => { 
-    console.log(JSON.parse(res))
-    data = JSON.parse(res)
-    var grid = new Grid(data.dungeon.x, data.dungeon.y, data.dungeon.cellSize);
-    grid.setupCanvas();
-    grid.displayCells();
-    });
 
 function httpGetAsync(theUrl, callback)
 {
@@ -58,3 +52,10 @@ function httpGetAsync(theUrl, callback)
     xmlHttp.open("GET", theUrl, true); // true for asynchronous 
     xmlHttp.send(null);
 }
+
+httpGetAsync("http://localhost:3000/data", (response) => { 
+    data = JSON.parse(response)
+    var grid = new Grid(data.Width, data.Height, data.TileConfig.Height);
+    grid.setupCanvas();
+    grid.renderDungeon(data.Tiles)
+});
