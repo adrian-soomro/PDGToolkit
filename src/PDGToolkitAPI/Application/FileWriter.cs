@@ -18,9 +18,4 @@ namespace PDGToolkitAPI.Application
             await File.WriteAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), settings.RelativePathToOutput), input);
         }
     }
-
-    public interface IFileWriter
-    {
-        Task WriteAsync(string input);
-    }
 }
