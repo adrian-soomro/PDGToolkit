@@ -1,3 +1,11 @@
 ﻿{
-    "foo" : "bar"
+    "grid" : {
+        "height" : 10,
+        "width" : 10
+    },
+    "tiles" : {
+        "height" : 1,
+        "width" : 1
+    },
+    "outputRelativePath" : "dungeon.json"
 }
