@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PDGToolkitAPI.Domain.Models;
+using PDGToolkitAPI.Infrastructure;
 
 namespace PDGToolkitAPI.Application
 {
