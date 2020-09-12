@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PDGToolkitAPI.Domain.Models;
 
 namespace PDGToolkitAPI.Application
@@ -14,20 +15,23 @@ namespace PDGToolkitAPI.Application
             this.settings = settings;
         }
 
-        public Grid GenerateGrid()
+        public async Task<Grid> GenerateGridAsync()
         {
-            var tiles = new List<Tile>();
-            for (var x = 0; x < settings.GridSettings.Width / settings.TileSettings.Width; x++)
+            return await Task.Run(() =>
             {
-                for (var y = 0; y < settings.GridSettings.Height / settings.TileSettings.Height; y++)
+                var tiles = new List<Tile>();
+                for (var x = 0; x < settings.GridSettings.Width / settings.TileSettings.Width; x++)
                 {
-                    var t = new Tile(GenerateRandomTileType(), new Position(x, y));
-                    tiles.Add(t);
+                    for (var y = 0; y < settings.GridSettings.Height / settings.TileSettings.Height; y++)
+                    {
+                        var t = new Tile(GenerateRandomTileType(), new Position(x, y));
+                        tiles.Add(t);
+                    }
                 }
-            }
 
-            return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
-                new TileConfig(settings.TileSettings.Height, settings.TileSettings.Width), tiles);
+                return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
+                    new TileConfig(settings.TileSettings.Height, settings.TileSettings.Width), tiles);
+            });
         }
 
         private TileType GenerateRandomTileType()

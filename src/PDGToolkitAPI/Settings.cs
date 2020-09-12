@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using PDGToolkitAPI.Domain.Models;
+﻿using System;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace PDGToolkitAPI
 {
@@ -7,11 +8,14 @@ namespace PDGToolkitAPI
     {
         public GridSettings GridSettings { get; }
         public TileSettings TileSettings { get; }
+        
+        public string RelativePathToOutput { get; }
 
         public Settings(IConfiguration config)
         {
             GridSettings = config.GetSection("grid").Get<GridSettings>();
             TileSettings = config.GetSection("tiles").Get<TileSettings>();
+            RelativePathToOutput = config.GetValue<string>("outputRelativePath");
         }
     }
     

@@ -1,9 +1,10 @@
-﻿using PDGToolkitAPI.Domain.Models;
+﻿using System.Threading.Tasks;
+using PDGToolkitAPI.Domain.Models;
 
 namespace PDGToolkitAPI.Application
 {
     public interface IGenerator
     {
-        Grid GenerateGrid();
+        Task<Grid> GenerateGridAsync();
     }
 }

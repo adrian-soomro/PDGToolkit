@@ -9,9 +9,11 @@ namespace PDGToolkitAPI
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(GetSettings());
+            services.AddSingleton(InitialiseSettings());
             services.AddTransient<IGenerator, RandomGenerator>();
             services.AddTransient<ISerialiser, JsonSerialiser>();
+            services.AddTransient<IFileWriter, FileWriter>();
+            services.AddSingleton<IRunner, Runner>();
         }
 
         private static IConfiguration GetConfiguration()
@@ -22,7 +24,7 @@ namespace PDGToolkitAPI
             return configurationBuilder.Build();
         }
 
-        private static Settings GetSettings()
+        private static Settings InitialiseSettings()
         {
             return new Settings(GetConfiguration());
         }
