@@ -9,7 +9,3 @@ request('http://localhost:3000/data', { json: true }, (err, res, body) => {
   var renderer = new Renderer()
   renderer.renderDungeon(grid)
 });
-
-
-
-
