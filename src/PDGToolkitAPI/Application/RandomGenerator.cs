@@ -21,17 +21,17 @@ namespace PDGToolkitAPI.Application
             return await Task.Run(() =>
             {
                 var tiles = new List<Tile>();
-                for (var x = 0; x < settings.GridSettings.Width / settings.TileSettings.Width; x++)
+                for (var x = 0; x < settings.GridSettings.Width / settings.TileSettings.Size; x++)
                 {
-                    for (var y = 0; y < settings.GridSettings.Height / settings.TileSettings.Height; y++)
+                    for (var y = 0; y < settings.GridSettings.Height / settings.TileSettings.Size; y++)
                     {
-                        var t = new Tile(GenerateRandomTileType(), new Position(x, y));
-                        tiles.Add(t);
+                        var tile = new Tile(GenerateRandomTileType(), new Position(x, y));
+                        tiles.Add(tile);
                     }
                 }
 
                 return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
-                    new TileConfig(settings.TileSettings.Height, settings.TileSettings.Width), tiles);
+                    new TileConfig(settings.TileSettings.Size), tiles);
             });
         }
 

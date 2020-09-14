@@ -4,8 +4,7 @@
         "width" : 1000
     },
     "tiles" : {
-        "height" : 10,
-        "width" : 10
+        "size" : 10
     },
     "outputRelativePath" : "dungeon.json"
 }
