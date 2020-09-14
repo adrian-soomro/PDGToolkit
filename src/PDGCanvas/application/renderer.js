@@ -6,8 +6,8 @@ class Renderer {
     }
 
     setupCanvas(height, width) {
-        canvas.height= height;
-        canvas.width= width;
+        canvas.height = height;
+        canvas.width = width;
     }
 
     renderDungeon(grid) {
@@ -15,8 +15,8 @@ class Renderer {
         var canvasContext = canvas.getContext("2d");
 
         grid.tiles.forEach(tile => {
-            canvasContext.fillStyle = colours.setColour(tile.Type.Name);
-            canvasContext.fillRect(tile.Position.X * grid.cellSize, tile.Position.Y * grid.cellSize, grid.cellSize, grid.cellSize);
+            canvasContext.fillStyle = colours.setColour(tile.type.name);
+            canvasContext.fillRect(tile.position.x * grid.tileSize, tile.position.y * grid.tileSize, grid.tileSize, grid.tileSize);
         });
     }
 }

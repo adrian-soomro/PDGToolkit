@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace PDGToolkitAPI.Application.Serialisers
 {
@@ -6,7 +7,19 @@ namespace PDGToolkitAPI.Application.Serialisers
     {
         public string Serialise<T>(T input)
         {
-            return input is null ? null : JsonConvert.SerializeObject(input);
+            var settings = SetupSettings();
+            return input is null ? null : JsonConvert.SerializeObject(input, settings);
+        }
+
+        private JsonSerializerSettings SetupSettings()
+        {
+            return new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                }
+            };
         }
     }
 }
