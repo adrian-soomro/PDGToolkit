@@ -2,13 +2,11 @@
 {
     public class TileConfig
     {
-        public int Height { get; }
-        public int Width { get; }
-        
-        public TileConfig(int height, int width)
+        public TileConfig(int size)
         {
-            Height = height;
-            Width = width;
+            Size = size;
         }
+
+        public int Size { get; }
     }
 }

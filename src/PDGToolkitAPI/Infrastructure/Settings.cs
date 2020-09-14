@@ -25,7 +25,6 @@ namespace PDGToolkitAPI.Infrastructure
     
     public class TileSettings
     {
-        public int Height { get; set; }
-        public int Width { get; set; }
+        public int Size { get; set; }
     }
 }
