@@ -7,6 +7,21 @@
 var app = require('../app');
 var debug = require('debug')('PDGCanvas:server');
 var http = require('http');
+var fs = require('fs');
+
+const path = require('path');
+const config = require('../config');
+
+/**
+ * Make sure the dungeon exists prior to starting the web server
+ */
+var pathToDungeon = path.resolve(config.relativePathToDungeon);
+fs.stat(pathToDungeon, function(err, stat) {
+  if(err != null && err.code === 'ENOENT') {
+    console.log(`Coun't find the file containing the dungeon at ${pathToDungeon}.\nPlease make sure you've generated a dungeon before trying to run the canvas again.`)
+    process.exit(1);
+  } 
+});
 
 /**
  * Get port from environment and store in Express.
