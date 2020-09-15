@@ -1,3 +1,3 @@
 module.exports = {
-    relativePathToDungeon: '../../dungeon.json',
+    relativePathToDungeon: '../../dungeonsd.json',
   };
