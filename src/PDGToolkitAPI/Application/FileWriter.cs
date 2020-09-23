@@ -15,7 +15,8 @@ namespace PDGToolkitAPI.Application
 
         public async Task WriteAsync(string input)
         {
-            await File.WriteAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), settings.RelativePathToOutput), input);
+            var projectRoot = Directory.GetParent(Directory.GetCurrentDirectory()).Parent?.Parent?.Parent?.Parent?.FullName;
+            await File.WriteAllTextAsync(Path.Combine(projectRoot ?? Directory.GetCurrentDirectory(), settings.RelativePathToOutput), input);
         }
     }
 }
