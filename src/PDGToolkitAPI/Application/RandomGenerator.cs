@@ -19,14 +19,13 @@ namespace PDGToolkitAPI.Application
             this.settings = settings;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;
             Height = settings.GridSettings.Height / settings.TileSettings.Size;
-            roomBuilder = new RoomBuilder(new Position(0,0), Width,Height);
+            roomBuilder = new RoomBuilder(new Position(0,0), Width, Height);
         }
 
         public async Task<Grid> GenerateGridAsync()
         {
             var tiles = await roomBuilder.CreateOuterWallsAsync();
-            var floor = await roomBuilder.FillInsideTiles(wallThickness => CreateFloor(wallThickness));
-            tiles.AddRange(floor);
+            tiles.AddRange(await roomBuilder.FillInsideTiles(wallThickness => CreateFloor(wallThickness)));
             
             return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
                 new TileConfig(settings.TileSettings.Size), tiles);

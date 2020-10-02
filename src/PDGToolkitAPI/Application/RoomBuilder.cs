@@ -7,19 +7,18 @@ namespace PDGToolkitAPI.Application
 {
     public class RoomBuilder
     {
+        private Position StartingPosition { get; }
+        private const int IndexOffset = 1;
+        private const int WallThickness = 1;
+        private int LengthOfX { get; }
+        private int LengthOfY { get; }
+
         public RoomBuilder(Position startingPosition, int lengthOfX, int lengthOfY)
         {
             StartingPosition = startingPosition;
             LengthOfX = lengthOfX;
             LengthOfY = lengthOfY;
         }
-
-        private const int IndexOffset = 1;
-        private const int WallThickness = 1;
-        private int LengthOfX { get; }
-        private int LengthOfY { get; }
-        
-        private Position StartingPosition { get; }
         
         public async Task<List<Tile>> CreateOuterWallsAsync()
         {
