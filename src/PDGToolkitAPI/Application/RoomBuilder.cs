@@ -29,14 +29,14 @@ namespace PDGToolkitAPI.Application
                 {
                     for (var x = StartingPosition.X; x < StartingPosition.X + LengthOfX; x++)
                     {
-                        tiles.Add(new Tile(TileType.Wall, new Position(x, thickness)));
-                        tiles.Add(new Tile(TileType.Wall, new Position(x, LengthOfY - IndexOffset - thickness)));
+                        tiles.Add(new Tile(TileType.Wall, new Position(x, StartingPosition.Y + thickness)));
+                        tiles.Add(new Tile(TileType.Wall, new Position(x, StartingPosition.Y + LengthOfY - IndexOffset - thickness)));
                     }
                     
                     for (var y = StartingPosition.Y; y < StartingPosition.Y + LengthOfY; y++)
                     {
-                        tiles.Add(new Tile(TileType.Wall, new Position(thickness, y)));
-                        tiles.Add(new Tile(TileType.Wall, new Position(LengthOfX - IndexOffset - thickness, y)));
+                        tiles.Add(new Tile(TileType.Wall, new Position(StartingPosition.X + thickness, y)));
+                        tiles.Add(new Tile(TileType.Wall, new Position(StartingPosition.X + LengthOfX - IndexOffset - thickness, y)));
                     }
                 }
 
@@ -44,9 +44,30 @@ namespace PDGToolkitAPI.Application
             });
         }
 
-        public async Task<List<Tile>> FillInsideTiles(Func<int, List<Tile>> func)
+        public async Task<List<Tile>> FillInsideTiles(Func<int, Task<List<Tile>>> roomFillingFunction)
         {
-            return await Task.Run(() => func.Invoke(WallThickness));
+            return await roomFillingFunction.Invoke(WallThickness);
+        }
+
+        public async Task<List<Tile>> FillInsideTilesWith(TileType type)
+        {
+            return await Task.Run(() =>
+            {
+                var tiles = new List<Tile>();
+                for (var x = StartingPosition.X + WallThickness;
+                    x < StartingPosition.X + LengthOfX - WallThickness;
+                    x++)
+                {
+                    for (var y = StartingPosition.Y + WallThickness;
+                        y < StartingPosition.Y + LengthOfY - WallThickness;
+                        y++)
+                    {
+                        tiles.Add(new Tile(type, new Position(x, y)));
+                    }
+                }
+
+                return tiles;
+            });
         }
 
     }

@@ -31,18 +31,21 @@ namespace PDGToolkitAPI.Application
                 new TileConfig(settings.TileSettings.Size), tiles);
         }
 
-        private List<Tile> CreateFloor(int wallThickness)
+        private async Task<List<Tile>> CreateFloor(int wallThickness)
         {
-            var tiles = new List<Tile>();
-            for (var x = wallThickness; x < Width - wallThickness; x++)
+            return await Task.Run(() => 
             {
-                for (var y = wallThickness; y < Height - wallThickness; y++)
+                var tiles = new List<Tile>();
+                for (var x = wallThickness; x < Width - wallThickness; x++)
                 {
-                    tiles.Add(new Tile(GenerateRandomTileType(), new Position(x, y)));
+                    for (var y = wallThickness; y < Height - wallThickness; y++)
+                    {
+                        tiles.Add(new Tile(GenerateRandomTileType(), new Position(x, y)));
+                    }
                 }
-            }
-
-            return tiles;
+                
+                return tiles;
+            });
         }
 
         private TileType GenerateRandomTileType()

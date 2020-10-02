@@ -19,6 +19,7 @@ namespace PDGToolkitAPI.Infrastructure
             var services = new ServiceCollection();
             services.AddSingleton(InitialiseSettings());
             services.AddTransient<IGenerator, RandomGenerator>();
+            services.AddTransient<IGenerator, SmallRoomsGenerator>();
             services.AddTransient<ISerialiser, JsonSerialiser>();
             services.AddTransient<IFileWriter, FileWriter>();
             services.AddSingleton<IRunner, Runner>();
