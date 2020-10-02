@@ -7,7 +7,7 @@
         public static readonly TileType Obstacle = new TileType("Obstacle");
         public string Name { get; }
         
-        public TileType(string name)
+        private TileType(string name)
         {
             Name = name;
         }
