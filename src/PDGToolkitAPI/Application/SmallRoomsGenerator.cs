@@ -13,10 +13,11 @@ namespace PDGToolkitAPI.Application
         private readonly RoomBuilder roomBuilder;
         private readonly int miniRoomMaxX;
         private readonly int miniRoomMaxY;
+        private const int MinimumRoomSize = 3;
 
         private int Width { get; }
         private int Height { get; }
-        private int oneInXChance = 600;
+        private int oneInXChanceToGenerateARoom = 600;
         
         public SmallRoomsGenerator(Settings settings)
         {
@@ -32,26 +33,19 @@ namespace PDGToolkitAPI.Application
         {
             var tiles = await roomBuilder.CreateOuterWallsAsync();
             
-            tiles.AddRange(await roomBuilder.FillInsideTiles(wallThickness => Kek(wallThickness)));
+            tiles.AddRange(await roomBuilder.FillInsideTiles(wallThickness => GenerateSmallRoomsAsync(wallThickness)));
             return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
                 new TileConfig(settings.TileSettings.Size), tiles);
         }
 
-        /*
-         go across the available space
-         and on each tile, theres's a X(5)% chance that this is a random Spot - center of a rectangle
-         if so, increment the number of allocated random spots & draw a rectangle with random x ( maxX / 4 ) and y (max Y / 4)   
-         meaning draw the walls if possible, don't draw anything outside. 
-         drawing walls can be done like so: for i in wallLength, make sure no walls are drawn outside of the great boundary
-         */
-        private async Task<List<Tile>> Kek(int wallThickness)
+        private async Task<List<Tile>> GenerateSmallRoomsAsync(int wallThickness)
         {
             var tiles = new List<Tile>();
                 for (var x = wallThickness; x < Width - wallThickness; x++)
                 {
                     for (var y = wallThickness; y < Height - wallThickness; y++)
                     {
-                        if (random.Next(oneInXChance) < 1)
+                        if (OneIn(oneInXChanceToGenerateARoom))
                         {
                             var smallRoomBuilder = new RoomBuilder(new Position(x, y),
                                 SelectWallLength(miniRoomMaxX), SelectWallLength(miniRoomMaxY));
@@ -67,11 +61,14 @@ namespace PDGToolkitAPI.Application
                 return tiles;
         }
         
-         // start counting from 3, as 0 can lead to really small rooms
         private int SelectWallLength(int maxSize)
         {
-            return random.Next(3, maxSize + 1);
+            return random.Next(MinimumRoomSize, maxSize);;
         }
-        
+
+        private bool OneIn(int chance)
+        {
+            return random.Next(chance) < 1;
+        }
     }
 }
