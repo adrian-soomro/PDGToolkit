@@ -10,60 +10,64 @@ namespace PDGToolkitAPI.Application
     {
         private readonly Settings settings;
         private readonly Random random = new Random();
-        private readonly RoomBuilder roomBuilder;
-        private readonly int miniRoomMaxX;
-        private readonly int miniRoomMaxY;
         private const int MinimumRoomSize = 3;
+        private const int OneInXChanceToGenerateARoom = 600;
 
         private int Width { get; }
         private int Height { get; }
-        private int oneInXChanceToGenerateARoom = 600;
         
         public SmallRoomsGenerator(Settings settings)
         {
             this.settings = settings;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;
             Height = settings.GridSettings.Height / settings.TileSettings.Size;
-            roomBuilder = new RoomBuilder(new Position(0,0),Width, Height);
-            miniRoomMaxX = Width / 4;
-            miniRoomMaxY = Height / 4;
         }
 
         public async Task<Grid> GenerateGridAsync()
         {
-            var tiles = await roomBuilder.CreateOuterWallsAsync();
+            var room = RoomBuilder.Create()
+                .WithHeight(Height)
+                .WithWidth(Width)
+                .WithInsideTiles(wallThickness => GenerateSmallRooms(wallThickness))
+                .WithOutsideWalls()
+                .Build();
             
-            tiles.AddRange(await roomBuilder.FillInsideTiles(wallThickness => GenerateSmallRoomsAsync(wallThickness)));
             return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
-                new TileConfig(settings.TileSettings.Size), tiles);
+                new TileConfig(settings.TileSettings.Size), room.Tiles);
         }
 
-        private async Task<List<Tile>> GenerateSmallRoomsAsync(int wallThickness)
+        private List<Tile> GenerateSmallRooms(int wallThickness)
         {
             var tiles = new List<Tile>();
                 for (var x = wallThickness; x < Width - wallThickness; x++)
                 {
                     for (var y = wallThickness; y < Height - wallThickness; y++)
                     {
-                        if (OneIn(oneInXChanceToGenerateARoom))
+                        if (OneIn(OneInXChanceToGenerateARoom))
                         {
-                            var smallRoomBuilder = new RoomBuilder(new Position(x, y),
-                                SelectWallLength(miniRoomMaxX), SelectWallLength(miniRoomMaxY));
-                            var roomWalls = await smallRoomBuilder.CreateOuterWallsAsync();
-                            var roomFloor = await smallRoomBuilder.FillInsideTilesWith(TileType.Floor);
+                            var room = RoomBuilder.Create()
+                                .WithWidth(SelectRoomWidth)
+                                .WithHeight(SelectRoomHeight)
+                                .WithStartingPosition(new Position(x, y))
+                                .WithOutsideWalls()
+                                .WithInsideTilesOfType(TileType.Floor)
+                                .Build();
                             
-                            tiles.AddRange(roomWalls);
-                            tiles.AddRange(roomFloor);
+                            tiles.AddRange(room.Tiles);
                         }
                     }
                 }
 
                 return tiles;
         }
+
+        // TODO: Refactor magic number to a meaningful variable
+        private int SelectRoomWidth => RandomlySelectWallLength(Width / 4);
+        private int SelectRoomHeight => RandomlySelectWallLength(Height / 4);
         
-        private int SelectWallLength(int maxSize)
+        private int RandomlySelectWallLength(int maxLength)
         {
-            return random.Next(MinimumRoomSize, maxSize);;
+            return random.Next(MinimumRoomSize, maxLength);;
         }
 
         private bool OneIn(int chance)
