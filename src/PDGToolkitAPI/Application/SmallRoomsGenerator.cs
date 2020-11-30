@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using PDGToolkitAPI.Domain.Models;
 using PDGToolkitAPI.Infrastructure;
@@ -35,7 +36,7 @@ namespace PDGToolkitAPI.Application
             return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
                 new TileConfig(settings.TileSettings.Size), room.Tiles);
         }
-
+        
         private List<Tile> GenerateSmallRooms(int wallThickness)
         {
             var tiles = new List<Tile>();
@@ -52,15 +53,39 @@ namespace PDGToolkitAPI.Application
                                 .WithOutsideWalls()
                                 .WithInsideTilesOfType(TileType.Floor)
                                 .Build();
-                            
+
                             tiles.AddRange(room.Tiles);
                         }
                     }
                 }
 
-                return tiles;
+                return RemoveDuplicateWalls(tiles);
         }
 
+        private List<Tile> RemoveDuplicateWalls(List<Tile> tiles)
+        {
+            var duplicateElements = tiles.GroupBy(t => t.Position)
+                .Where(g => g.Count() > 1)
+                .Select(y => new { Element = y.Key})
+                .ToList();
+
+            var dupes = duplicateElements.Select(q => q.Element);
+            
+            var toBeRemoved = tiles.Where(tile => dupes.Contains(tile.Position) && tile.Type == TileType.Wall).ToList();
+
+
+            foreach (var tileToBeRemoved in toBeRemoved)
+            {
+                var dupe = tiles.Find(t => t.Position.Equals(tileToBeRemoved.Position) && t.Type.Equals(TileType.Floor));
+                if (dupe != null )
+                {
+                    tiles.Remove(tileToBeRemoved);
+                }
+            }
+  
+            return tiles;
+        }
+        
         // TODO: Refactor magic number to a meaningful variable
         private int SelectRoomWidth => RandomlySelectWallLength(Width / 4);
         private int SelectRoomHeight => RandomlySelectWallLength(Height / 4);

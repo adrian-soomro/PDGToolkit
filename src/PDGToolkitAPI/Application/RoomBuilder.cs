@@ -93,7 +93,6 @@ namespace PDGToolkitAPI.Application
             
             return outerWalls;
         }
-        
 
         private List<Tile> FillInsideTilesWith(TileType type)
         {
