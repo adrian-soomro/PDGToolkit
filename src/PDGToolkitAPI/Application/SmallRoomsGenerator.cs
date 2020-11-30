@@ -59,33 +59,90 @@ namespace PDGToolkitAPI.Application
                     }
                 }
 
-                return RemoveDuplicateWalls(tiles);
+                tiles = RemoveOverlappingDuplicateWalls(tiles);
+                return RemoveSharedWalls(tiles);
         }
 
-        private List<Tile> RemoveDuplicateWalls(List<Tile> tiles)
+        private Dictionary<Position, int> GetPositionsOfDuplicateTiles(List<Tile> tiles)
         {
-            var duplicateElements = tiles.GroupBy(t => t.Position)
-                .Where(g => g.Count() > 1)
-                .Select(y => new { Element = y.Key})
-                .ToList();
+            return tiles.GroupBy(t => t.Position)
+                        .Where(g => g.Count() > 1)
+                        .Select(y => new { Element = y.Key, Count = y.Count()})
+                        .ToDictionary(x => x.Element, y => y.Count);
+        }
+        
+        private List<Tile> RemoveOverlappingDuplicateWalls(List<Tile> allTiles)
+        {
+            var positionToNumberOfWalls = GetPositionsOfDuplicateTiles(allTiles);
+            var duplicatePositions = positionToNumberOfWalls.Keys.ToList();
 
-            var dupes = duplicateElements.Select(q => q.Element);
+            var floorTilesWithDuplicateTilesInTheSamePosition = FindTilesBasedOnPositionsAndType(allTiles, duplicatePositions, TileType.Floor);
+
+            var toBeRemoved = new List<Tile>();
             
-            var toBeRemoved = tiles.Where(tile => dupes.Contains(tile.Position) && tile.Type == TileType.Wall).ToList();
-
-
-            foreach (var tileToBeRemoved in toBeRemoved)
+            foreach (var tile in floorTilesWithDuplicateTilesInTheSamePosition)
             {
-                var dupe = tiles.Find(t => t.Position.Equals(tileToBeRemoved.Position) && t.Type.Equals(TileType.Floor));
-                if (dupe != null )
+                var dupes =  FindTilesBasedOnPositionAndType(allTiles, tile.Position, TileType.Wall);
+
+                toBeRemoved.AddRange(dupes);
+            }
+
+            foreach (var tile in toBeRemoved)
+            {
+                allTiles.Remove(tile);
+            }
+            return allTiles;
+        }
+        
+        private List<Tile> RemoveSharedWalls(List<Tile> tiles)
+        {
+            var positionToNumberOfDuplicates = GetPositionsOfDuplicateTiles(tiles);
+            var allDuplicatePositions = positionToNumberOfDuplicates.Keys.ToList();
+
+            var duplicateWalls = FindTilesBasedOnPositionsAndType(tiles, allDuplicatePositions, TileType.Wall);
+            var toBeRemoved = new List<Tile>();
+            foreach (var tile in duplicateWalls)
+            {
+                positionToNumberOfDuplicates.TryGetValue(tile.Position, out var numberOfWallTilesInThisPosition);
+                if (numberOfWallTilesInThisPosition >= 2 && HasTwoAdjacentFloorTiles(tiles, tile))
                 {
-                    tiles.Remove(tileToBeRemoved);
+                    toBeRemoved.Add(tile);
                 }
             }
-  
+
+            foreach (var tile in toBeRemoved)
+            {
+                tiles.Add(new Tile(TileType.Floor, tile.Position));
+                tiles.Remove(tile);
+            }
+
             return tiles;
         }
         
+        private List<Tile> FindTilesBasedOnPositionAndType(List<Tile> tiles, Position position, TileType type)
+        {
+            return tiles.FindAll(t => t.Position.Equals(position) && t.Type.Equals(type));  
+        }
+        
+        private List<Tile> FindTilesBasedOnPositionsAndType(List<Tile> tiles, List<Position> positions, TileType type)
+        {
+            return tiles.FindAll(t => positions.Contains(t.Position) && t.Type.Equals(type));  
+        }
+        
+        private bool HasTwoAdjacentFloorTiles(List<Tile> allTiles, Tile tileInQuestion)
+        {
+            var up = new Position(tileInQuestion.Position.X, tileInQuestion.Position.Y + 1);
+            var down = new Position(tileInQuestion.Position.X, tileInQuestion.Position.Y - 1);
+            var left = new Position(tileInQuestion.Position.X - 1, tileInQuestion.Position.Y);
+            var right = new Position(tileInQuestion.Position.X + 1, tileInQuestion.Position.Y);
+            var adjacents = allTiles.Where(t => t.Type.Equals(TileType.Floor)).ToList().FindAll(t =>
+                t.Position.Equals(up) || t.Position.Equals(down) || t.Position.Equals(left) ||
+                t.Position.Equals(right));
+
+            var adjacentFloorPositions = adjacents.Select(a => a.Position); 
+            return adjacentFloorPositions.Contains(up) && adjacentFloorPositions.Contains(down) || adjacentFloorPositions.Contains(right) && adjacentFloorPositions.Contains(left);
+        }
+
         // TODO: Refactor magic number to a meaningful variable
         private int SelectRoomWidth => RandomlySelectWallLength(Width / 4);
         private int SelectRoomHeight => RandomlySelectWallLength(Height / 4);
