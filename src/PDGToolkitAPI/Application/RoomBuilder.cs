@@ -55,7 +55,6 @@ namespace PDGToolkitAPI.Application
             return this;
         }
 
-        
         public RoomBuilder WithInsideTiles(Func<int, List<Tile>> roomFillingFunction)
         {
             tiles.AddRange(roomFillingFunction.Invoke(wallThickness));
