@@ -10,25 +10,28 @@ namespace PDGToolkitAPI.Application
     {
         private readonly Random random = new Random();
         private readonly Settings settings;
-        private readonly RoomBuilder roomBuilder;
         private int Width { get; }
         private int Height { get; }
-
+        
         public RandomGenerator(Settings settings)
         {
             this.settings = settings;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;
             Height = settings.GridSettings.Height / settings.TileSettings.Size;
-            roomBuilder = new RoomBuilder(new Position(0,0), Width, Height);
         }
 
         public async Task<Grid> GenerateGridAsync()
         {
-            var tiles = await roomBuilder.CreateOuterWallsAsync();
-            tiles.AddRange(await roomBuilder.FillInsideTiles(wallThickness => CreateFloor(wallThickness)));
-            
+            //TODO: make RoomBuilder async
+            var room = RoomBuilder.Create()
+                .WithHeight(Height)
+                .WithWidth(Width)
+                .WithOutsideWalls()
+                .WithInsideTiles(wallThickness => CreateFloor(wallThickness))
+                .Build();
+
             return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
-                new TileConfig(settings.TileSettings.Size), tiles);
+                new TileConfig(settings.TileSettings.Size), room.Tiles);
         }
 
         private List<Tile> CreateFloor(int wallThickness)
@@ -41,7 +44,7 @@ namespace PDGToolkitAPI.Application
                     tiles.Add(new Tile(GenerateRandomTileType(), new Position(x, y)));
                 }
             }
-
+            
             return tiles;
         }
 
