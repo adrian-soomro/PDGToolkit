@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PDGToolkitAPI.Application.Serialisers
+﻿namespace PDGToolkitAPI.API.Serialisers
 {
     public interface ISerialiser
     {

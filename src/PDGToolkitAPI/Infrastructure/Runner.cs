@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using PDGToolkitAPI.API;
+using PDGToolkitAPI.API.Serialisers;
 using PDGToolkitAPI.Application;
-using PDGToolkitAPI.Application.Serialisers;
 
 namespace PDGToolkitAPI.Infrastructure
 {
