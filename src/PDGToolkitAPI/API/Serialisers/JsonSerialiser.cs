@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace PDGToolkitAPI.Application.Serialisers
+namespace PDGToolkitAPI.API.Serialisers
 {
     public class JsonSerialiser : ISerialiser
     {
