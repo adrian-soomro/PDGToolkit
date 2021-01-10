@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using PDGToolkitAPI.Domain.Models;
 using PDGToolkitAPI.Infrastructure;
 
 namespace PDGToolkitAPI.Application
 {
-    public class SmallRoomsGenerator : IGenerator
+    public class TeenyZonesGenerator : IGenerator
     {
         private readonly Settings settings;
         private readonly Random random = new Random();
@@ -18,7 +17,7 @@ namespace PDGToolkitAPI.Application
         private int Width { get; }
         private int Height { get; }
         
-        public SmallRoomsGenerator(Settings settings, ITileService tileService)
+        public TeenyZonesGenerator(Settings settings, ITileService tileService)
         {
             this.settings = settings;
             this.tileService = tileService;
@@ -31,7 +30,7 @@ namespace PDGToolkitAPI.Application
             var room = RoomBuilder.Create()
                 .WithHeight(Height)
                 .WithWidth(Width)
-                .WithInsideTiles(wallThickness => GenerateSmallRooms(wallThickness))
+                .WithInsideTiles(wallThickness => GenerateRooms(wallThickness))
                 .WithOutsideWalls()
                 .Build();
             
@@ -39,7 +38,7 @@ namespace PDGToolkitAPI.Application
                 new TileConfig(settings.TileSettings.Size), room.Tiles);
         }
 
-        private List<Tile> GenerateSmallRooms(int wallThickness)
+        private List<Tile> GenerateRooms(int wallThickness)
         {
             var tiles = new List<Tile>();
             for (var x = wallThickness; x < Width - wallThickness; x++)
