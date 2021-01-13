@@ -20,31 +20,33 @@ done
 
 if [ "$n" -eq "$timeout" ]; then echo "$SWAGGERUI is not ready after $n seconds" && exit 1; fi
 
-# to grab the file
-mkdir tmp && wget $SWAGGERFILE -O ./tmp/swaggerfile.json
+mkdir tmp && cd tmp
 
-#install widdershins
-npm install -g widdershins
+# to grab the file
+wget $SWAGGERFILE -O ./swaggerfile.json
+
+# install widdershins
+npm install widdershins
 
 # generate md file
-widdershins --search false --summary ./tmp/swaggerfile.json -o ./tmp/schema_doc.md
+./node_modules/widdershins/widdershins.js --search false --summary ./swaggerfile.json -o ./schema_doc.md
 
 # trim generated file
-awk '/# Schemas/{p=1}p' ./tmp/schema_doc.md > ./tmp/temp_schema_doc.md 
+awk '/# Schemas/{p=1}p' ./schema_doc.md > ./temp_schema_doc.md 
 
 # remove everything after a keyword and put it in a temp file
-sed -n '/# Schemas/q;p' ./README.md > ./tmp/temp_readme.md
+sed -n '/# Schemas/q;p' ../README.md > ./temp_readme.md
 
 # append trimmed generated file to the end of temp file
-cat ./tmp/temp_schema_doc.md >> ./tmp/temp_readme.md
+cat ./temp_schema_doc.md >> ./temp_readme.md
 
 # remove old readme and replace it by the temp file
-rm ./README.md && mv ./tmp/temp_readme.md ./README.md
+rm ../README.md && mv ./temp_readme.md ../README.md
 
 # debug - temporary
-cat ./README.md
+cat ../README.md
 
 # cleanup 
-rm ./tmp -rf
+cd .. && rm ./tmp -rf
 
 #commit readme.md & push
