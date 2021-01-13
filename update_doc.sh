@@ -43,9 +43,6 @@ cat ./temp_schema_doc.md >> ./temp_readme.md
 # remove old readme and replace it by the temp file
 rm ../README.md && mv ./temp_readme.md ../README.md
 
-# debug - temporary
-cat ../README.md
-
 # cleanup 
 cd .. && rm ./tmp -rf
 
