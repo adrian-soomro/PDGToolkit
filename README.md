@@ -57,3 +57,132 @@ From the root of this repository:
 You should now be able to access the swagger page at http://localhost:1337/swagger/index.html
 
 
+# Schemas
+
+<h2 id="tocS_TileConfig">TileConfig</h2>
+<!-- backwards compatibility -->
+<a id="schematileconfig"></a>
+<a id="schema_TileConfig"></a>
+<a id="tocStileconfig"></a>
+<a id="tocstileconfig"></a>
+
+```json
+{
+  "size": 0
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|size|integer(int32)|false|read-only|none|
+
+<h2 id="tocS_TileType">TileType</h2>
+<!-- backwards compatibility -->
+<a id="schematiletype"></a>
+<a id="schema_TileType"></a>
+<a id="tocStiletype"></a>
+<a id="tocstiletype"></a>
+
+```json
+{
+  "name": "string"
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|name|string¦null|false|read-only|none|
+
+<h2 id="tocS_Position">Position</h2>
+<!-- backwards compatibility -->
+<a id="schemaposition"></a>
+<a id="schema_Position"></a>
+<a id="tocSposition"></a>
+<a id="tocsposition"></a>
+
+```json
+{
+  "x": 0,
+  "y": 0
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|x|integer(int32)|false|read-only|none|
+|y|integer(int32)|false|read-only|none|
+
+<h2 id="tocS_Tile">Tile</h2>
+<!-- backwards compatibility -->
+<a id="schematile"></a>
+<a id="schema_Tile"></a>
+<a id="tocStile"></a>
+<a id="tocstile"></a>
+
+```json
+{
+  "type": {
+    "name": "string"
+  },
+  "position": {
+    "x": 0,
+    "y": 0
+  }
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|type|[TileType](#schematiletype)|false|none|none|
+|position|[Position](#schemaposition)|false|none|none|
+
+<h2 id="tocS_Grid">Grid</h2>
+<!-- backwards compatibility -->
+<a id="schemagrid"></a>
+<a id="schema_Grid"></a>
+<a id="tocSgrid"></a>
+<a id="tocsgrid"></a>
+
+```json
+{
+  "height": 0,
+  "width": 0,
+  "tileConfig": {
+    "size": 0
+  },
+  "tiles": [
+    {
+      "type": {
+        "name": "string"
+      },
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ]
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|height|integer(int32)|false|read-only|none|
+|width|integer(int32)|false|read-only|none|
+|tileConfig|[TileConfig](#schematileconfig)|false|none|none|
+|tiles|[[Tile](#schematile)]¦null|false|read-only|none|
+
