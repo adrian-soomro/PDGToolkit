@@ -20,3 +20,8 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
+    - name: Spin up Schema UI
+      run: dotnet run --project ./src/PDGToolkitUI/PDGToolkitUI.csproj
+    - name: Update Documentation
+      run: ./update_doc.sh
+      shell: bash
