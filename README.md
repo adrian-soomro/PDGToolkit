@@ -45,3 +45,15 @@ From the src/PDGCanvas directory:
    
    With a web browser of your choice, navigate to http://localhost:3000
 
+### Schema
+To view the schema of the dungeons that the Toolkit produces, build and run the PDGToolkitUI project.
+
+From the root of this repository:
+
+```sh
+   dotnet run --project ./src/PDGToolkitUI/PDGToolkitUI.csproj
+```
+
+You should now be able to access the swagger page at http://localhost:1337/swagger/index.html
+
+
