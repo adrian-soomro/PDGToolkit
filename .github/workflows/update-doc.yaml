@@ -16,15 +16,21 @@ jobs:
     - name: Update Documentation
       run: bash update_doc.sh
       shell: bash
+    - name: Check for changes
+      run: |
+        git diff --exit-code ./README.md
+        export CHANGED=$?
+        printenv | sort
     - name: Commit files
       run: |
+        printenv | sort
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         git add ./README.md && git commit -m "Automated Documentation Update"
-      if: git diff --exit-code ./README.md
+      if: env.CHANGED == 1
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
-      if: git diff --exit-code ./README.md
+      if: env.CHANGED == 1
