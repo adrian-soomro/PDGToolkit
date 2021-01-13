@@ -3,6 +3,9 @@ timeout=${SETUP_TIMEOUT:-600}
 SWAGGERUI="http://localhost:1337/swagger/index.html"
 SWAGGERFILE="http://localhost:1337/swagger/v1/swagger.json"
 
+echo "Starting Schema UI Server"
+
+nohup dotnet run --project ./src/PDGToolkitUI/PDGToolkitUI.csproj &
 
 echo "Waiting for $SWAGGERUI to be ready..."
 
