@@ -20,6 +20,3 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-    - name: Update Documentation
-      run: bash update_doc.sh
-      shell: bash
