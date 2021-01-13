@@ -3,7 +3,7 @@ name: "Update documentation"
 on:
   push:
     branches:
-      - feature/12-self-updating-documentation
+      - master
 
 jobs:
   build:
