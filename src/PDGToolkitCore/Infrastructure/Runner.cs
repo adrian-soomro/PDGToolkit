@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PDGToolkitCore.API;
 using PDGToolkitCore.API.Serialisers;
 using PDGToolkitCore.Application;
