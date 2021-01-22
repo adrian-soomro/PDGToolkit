@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PDGToolkitAPI.API;
-using PDGToolkitAPI.API.Serialisers;
-using PDGToolkitAPI.Application;
+using PDGToolkitCore.API;
+using PDGToolkitCore.API.Serialisers;
+using PDGToolkitCore.Application;
 
-namespace PDGToolkitAPI.Infrastructure
+namespace PDGToolkitCore.Infrastructure
 {
     public static class Startup
     {

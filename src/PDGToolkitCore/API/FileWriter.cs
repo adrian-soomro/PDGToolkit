@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using PDGToolkitAPI.Infrastructure;
+using PDGToolkitCore.Infrastructure;
 
-namespace PDGToolkitAPI.API
+namespace PDGToolkitCore.API
 {
     public class FileWriter : IFileWriter
     {

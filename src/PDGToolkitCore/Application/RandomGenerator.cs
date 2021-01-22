@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PDGToolkitAPI.Domain.Models;
-using PDGToolkitAPI.Infrastructure;
+using PDGToolkitCore.Domain.Models;
+using PDGToolkitCore.Infrastructure;
 
-namespace PDGToolkitAPI.Application
+namespace PDGToolkitCore.Application
 {
     public class RandomGenerator : IGenerator
     {

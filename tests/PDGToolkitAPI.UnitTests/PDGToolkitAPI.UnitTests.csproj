@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\PDGToolkitAPI\PDGToolkitAPI.csproj" />
+      <ProjectReference Include="..\..\src\PDGToolkitCore\PDGToolkitCore.csproj" />
     </ItemGroup>
 
 </Project>

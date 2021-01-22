@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace PDGToolkitAPI.Infrastructure
+namespace PDGToolkitCore.Infrastructure
 {
     public interface IRunner
     {

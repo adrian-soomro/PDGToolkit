@@ -1,4 +1,4 @@
-﻿namespace PDGToolkitAPI.Domain.Models
+﻿namespace PDGToolkitCore.Domain.Models
 {
     public struct Position
     {

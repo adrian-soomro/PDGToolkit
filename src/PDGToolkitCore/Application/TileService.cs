@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using PDGToolkitAPI.Domain.Models;
+using PDGToolkitCore.Domain.Models;
 
-namespace PDGToolkitAPI.Application
+namespace PDGToolkitCore.Application
 {
     public class TileService : ITileService
     {

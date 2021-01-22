@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace PDGToolkitAPI.API
+namespace PDGToolkitCore.API
 {
     public interface IFileWriter
     {

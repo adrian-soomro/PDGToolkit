@@ -1,4 +1,4 @@
-﻿namespace PDGToolkitAPI.API.Serialisers
+﻿namespace PDGToolkitCore.API.Serialisers
 {
     public interface ISerialiser
     {

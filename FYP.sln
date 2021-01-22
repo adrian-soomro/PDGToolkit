@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDGToolkitAPI", "src\PDGToolkitAPI\PDGToolkitAPI.csproj", "{F8E4F3AF-6FF8-4738-A4EE-A3C235B66BD3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDGToolkitCore", "src\PDGToolkitCore\PDGToolkitCore.csproj", "{F8E4F3AF-6FF8-4738-A4EE-A3C235B66BD3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDGToolkitAPI.UnitTests", "tests\PDGToolkitAPI.UnitTests\PDGToolkitAPI.UnitTests.csproj", "{21E052E8-55D8-4595-890D-5AF38F9FCFE8}"
 EndProject

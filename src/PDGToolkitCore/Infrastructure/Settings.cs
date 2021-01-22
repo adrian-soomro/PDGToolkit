@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace PDGToolkitAPI.Infrastructure
+namespace PDGToolkitCore.Infrastructure
 {
     public class Settings
     {

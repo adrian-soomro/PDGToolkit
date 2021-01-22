@@ -2,8 +2,8 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using PDGToolkitAPI.Application;
-using PDGToolkitAPI.Domain.Models;
+using PDGToolkitCore.Application;
+using PDGToolkitCore.Domain.Models;
 
 
 namespace PDGToolkitAPI.UnitTests

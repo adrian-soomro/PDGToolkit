@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using PDGToolkitAPI.Domain.Models;
+using PDGToolkitCore.Domain.Models;
 
-namespace PDGToolkitAPI.Application
+namespace PDGToolkitCore.Application
 {
     public interface IGenerator
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PDGToolkitAPI.Domain.Models
+namespace PDGToolkitCore.Domain.Models
 {
     public class Grid
     {
