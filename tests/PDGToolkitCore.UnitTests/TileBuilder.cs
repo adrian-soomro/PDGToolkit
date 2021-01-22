@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using PDGToolkitCore.Domain.Models;
 
-namespace PDGToolkitAPI.UnitTests
+namespace PDGToolkitCore.UnitTests
 {
     public class TileBuilder
     {

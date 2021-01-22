@@ -6,7 +6,7 @@ using PDGToolkitCore.Application;
 using PDGToolkitCore.Domain.Models;
 
 
-namespace PDGToolkitAPI.UnitTests
+namespace PDGToolkitCore.UnitTests
 {
     [TestFixture]
     public class TileServiceTests
