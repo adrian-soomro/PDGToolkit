@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PDGToolkitCore.Domain.Models;
 
-namespace PDGToolkitUI.Controllers
+namespace PDGToolkitSchemaUI.Controllers
 {
     [ApiController]
     [Route("[controller]")]

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 
 using Microsoft.OpenApi.Models;
 
-namespace PDGToolkitUI
+namespace PDGToolkitSchemaUI
 {
     public class Startup
     {

@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDGToolkitCore", "src\PDGTo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDGToolkitAPI.UnitTests", "tests\PDGToolkitAPI.UnitTests\PDGToolkitAPI.UnitTests.csproj", "{21E052E8-55D8-4595-890D-5AF38F9FCFE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDGToolkitUI", "src\PDGToolkitUI\PDGToolkitUI.csproj", "{EDCDD0A8-3BDA-4E42-BC8E-37DD11F514A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDGToolkitSchemaUI", "src\PDGToolkitSchemaUI\PDGToolkitSchemaUI.csproj", "{EDCDD0A8-3BDA-4E42-BC8E-37DD11F514A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
