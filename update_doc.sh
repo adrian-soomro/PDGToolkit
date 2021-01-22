@@ -45,5 +45,3 @@ rm ../README.md && mv ./temp_readme.md ../README.md
 
 # cleanup 
 cd .. && rm ./tmp -rf
-
-#commit readme.md & push
