@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PDGToolkitCore.Infrastructure;
 
@@ -15,8 +16,18 @@ namespace PDGToolkitCore.API
 
         public async Task WriteAsync(string input)
         {
-            var projectRoot = Directory.GetParent(Directory.GetCurrentDirectory()).Parent?.Parent?.Parent?.Parent?.FullName;
-            await File.WriteAllTextAsync(Path.Combine(projectRoot ?? Directory.GetCurrentDirectory(), settings.RelativePathToOutput), input);
+            await File.WriteAllTextAsync(Path.Combine(GetApplicationRoot(), settings.RelativePathToOutput), input);
+        }
+        
+        /*
+         * Modified version of: http://codebuckets.com/2017/10/19/getting-the-root-directory-path-for-net-core-applications/
+         */
+        private string GetApplicationRoot()
+        {
+            var exePath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
+            Regex appPathMatcher= new Regex(@"^(.*?)FYP"); //TODO rename FYP -> PDGToolkit (repo name)
+            var appRoot= appPathMatcher.Match(exePath).Value;
+            return appRoot;
         }
     }
 }
