@@ -1,0 +1,10 @@
+﻿{
+    "grid" : {
+        "width" : 1280,
+        "height" : 720
+    },
+    "tiles" : {
+        "size" : 10
+    },
+    "outputRelativePath" : "dungeon.json"
+}

@@ -5,7 +5,7 @@ SWAGGERFILE="http://localhost:1337/swagger/v1/swagger.json"
 
 echo "Starting Schema UI Server"
 
-nohup dotnet run --project ./src/PDGToolkitUI/PDGToolkitUI.csproj &
+nohup dotnet run --project ./src/PDGToolkitSchemaUI/PDGToolkitSchemaUI.csproj &
 
 echo "Waiting for $SWAGGERUI to be ready..."
 
@@ -32,10 +32,10 @@ npm install widdershins
 ./node_modules/widdershins/widdershins.js --search false --summary ./swaggerfile.json -o ./schema_doc.md
 
 # trim generated file
-awk '/# Schemas/{p=1}p' ./schema_doc.md > ./temp_schema_doc.md 
+awk '/# Schema overview/{p=1}p' ./schema_doc.md > ./temp_schema_doc.md 
 
 # remove everything after a keyword and put it in a temp file
-sed -n '/# Schemas/q;p' ../README.md > ./temp_readme.md
+sed -n '/# Schema overview/q;p' ../README.md > ./temp_readme.md
 
 # append trimmed generated file to the end of temp file
 cat ./temp_schema_doc.md >> ./temp_readme.md
@@ -45,5 +45,3 @@ rm ../README.md && mv ./temp_readme.md ../README.md
 
 # cleanup 
 cd .. && rm ./tmp -rf
-
-#commit readme.md & push

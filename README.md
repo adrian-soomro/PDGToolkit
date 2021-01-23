@@ -6,7 +6,7 @@ Cross platform, game-engine independant .Net Core 3 Application for procedurally
 - [.Net Core 3.1.301+](https://dotnet.microsoft.com/download)
 - [Node v12.18.3+](https://nodejs.org/en/)
   
-**You can use either the latest version of Visual Studio or .NET CLI for Windows, Mac and Linux**.
+**You can use either the latest version of Visual Studio, JetBrain's Rider or .NET CLI for Windows, Mac and Linux**.
 
 
 ## Getting started
@@ -15,16 +15,11 @@ Cross platform, game-engine independant .Net Core 3 Application for procedurally
 
 From the root of this repository:
 
-1. Compile the projects and their dependencies
+Run the project
    ```sh
-   dotnet publish -c Release -o ./out FYP.sln 
+   dotnet run --project ./src/PDGToolkitCore/PDGToolkitCore.csproj
    ```
-   
-2. Run the project
-   ```sh
-   dotnet out/PDGToolkitAPI.dll
-   ```
-
+  
 ### Canvas
 
 From the src/PDGCanvas directory:
@@ -45,19 +40,26 @@ From the src/PDGCanvas directory:
    
    With a web browser of your choice, navigate to http://localhost:3000
 
-### Schema
+### Schema UI
 To view the schema of the dungeons that the Toolkit produces, build and run the PDGToolkitUI project.
 
 From the root of this repository:
 
 ```sh
-   dotnet run --project ./src/PDGToolkitUI/PDGToolkitUI.csproj
+   dotnet run --project ./src/PDGToolkitSchemaUI/PDGToolkitSchemaUI.csproj
 ```
 
 You should now be able to access the swagger page at http://localhost:1337/swagger/index.html
 
+### Unit tests
+To run Core's unit test, use the dotnet test command.
 
-# Schemas
+From the root of this repository:
+```sh
+dotnet test ./tests/PDGToolkitCore.UnitTests/PDGToolkitCore.UnitTests.csproj
+```
+
+# Schema overview
 
 <h2 id="tocS_TileConfig">TileConfig</h2>
 <!-- backwards compatibility -->
