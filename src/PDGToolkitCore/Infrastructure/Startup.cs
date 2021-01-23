@@ -8,11 +8,15 @@ namespace PDGToolkitCore.Infrastructure
 {
     public static class Startup
     {
-        public static IRunner InitialiseRunner()
+        public static IRunner InitialiseRunner(string generatorName)
         {
             var services = ConfigureServices();
             var serviceProvider = services.BuildServiceProvider();
-            return serviceProvider.GetService<IRunner>();
+            var generators = serviceProvider.GetServices<IGenerator>();
+
+            var selectedGenerator = GeneratorLoader.LoadGenerator(generators, generatorName);
+            
+            return new Runner(selectedGenerator, serviceProvider.GetService<ISerialiser>(),serviceProvider.GetService<IFileWriter>());
         }
         
         private static IServiceCollection ConfigureServices()
