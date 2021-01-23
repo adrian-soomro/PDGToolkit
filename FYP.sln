@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDGToolkitCore.UnitTests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDGToolkitSchemaUI", "src\PDGToolkitSchemaUI\PDGToolkitSchemaUI.csproj", "{EDCDD0A8-3BDA-4E42-BC8E-37DD11F514A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDGToolkitCLI", "src\PDGToolkitCLI\PDGToolkitCLI.csproj", "{52F898C1-CC19-4145-B01E-AFE4D845F4E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{EDCDD0A8-3BDA-4E42-BC8E-37DD11F514A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDCDD0A8-3BDA-4E42-BC8E-37DD11F514A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDCDD0A8-3BDA-4E42-BC8E-37DD11F514A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52F898C1-CC19-4145-B01E-AFE4D845F4E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52F898C1-CC19-4145-B01E-AFE4D845F4E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52F898C1-CC19-4145-B01E-AFE4D845F4E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52F898C1-CC19-4145-B01E-AFE4D845F4E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

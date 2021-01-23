@@ -4,7 +4,7 @@ using PDGToolkitCore.Infrastructure;
 
 namespace PDGToolkitCore
 {
-    internal static class Program
+    public static class Program
     {
         public static async Task Main(string[] args)
         {
