@@ -70,7 +70,7 @@ namespace PDGToolkitCore.Application
         
         private int RandomlySelectWallLength(int maxLength)
         {
-            return random.Next(MinimumRoomSize, maxLength);;
+            return random.Next(MinimumRoomSize, maxLength);
         }
 
         private bool OneIn(int chance)
