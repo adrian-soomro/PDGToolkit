@@ -15,11 +15,22 @@ Cross platform, game-engine independant .Net Core 3 Application for procedurally
 
 From the root of this repository:
 
-Run the project
+1. Build the project into a directory of your liking
+   
    ```sh
-   dotnet run --project ./src/PDGToolkitCore/PDGToolkitCore.csproj
+   dotnet publish ./src/PDGToolkitCLI/PDGToolkitCLI.csproj -c Debug --output <YOUR-PATH>
    ```
-  
+2. Run the CLI executable
+   
+    ```sh
+    ./<YOUR-PATH>/PDGToolkitCLI
+    ```
+
+**Note: The CLI takes additional options, to view them, add the '--help' flag while executing the CLI**
+
+  ```sh
+  ./out/PDGToolkitCLI --help
+  ```
 ### Canvas
 
 From the src/PDGCanvas directory:
