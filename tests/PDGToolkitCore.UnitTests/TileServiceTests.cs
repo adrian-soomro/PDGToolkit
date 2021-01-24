@@ -13,11 +13,6 @@ namespace PDGToolkitCore.UnitTests
     {
         private readonly ITileService tileService = new TileService();
         
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void Tile__HasTwoVerticallyAdjacentFloorTilesTest()
         {
