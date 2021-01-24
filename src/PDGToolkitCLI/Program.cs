@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
+using PDGToolkitCore.Infrastructure;
 
 namespace PDGToolkitCLI
 {
@@ -13,8 +14,8 @@ namespace PDGToolkitCLI
         
         private async Task OnExecuteAsync()
         {
-            var parsedArgs = new [] {Generator};
-            await PDGToolkitCore.Program.Main(parsedArgs); 
+            var runner = Startup.InitialiseRunner(Generator);
+            await runner.Run();
         }
     }
 }
