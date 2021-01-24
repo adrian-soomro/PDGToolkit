@@ -29,7 +29,7 @@ From the root of this repository:
 **Note: The CLI takes additional options, to view them, add the '--help' flag while executing the CLI**
 
   ```sh
-  ./out/PDGToolkitCLI --help
+  ./<YOUR-PATH>/PDGToolkitCLI
   ```
 ### Canvas
 
