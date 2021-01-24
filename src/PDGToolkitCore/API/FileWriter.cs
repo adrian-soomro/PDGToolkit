@@ -16,18 +16,7 @@ namespace PDGToolkitCore.API
 
         public async Task WriteAsync(string input)
         {
-            await File.WriteAllTextAsync(Path.Combine(GetApplicationRoot(), settings.RelativePathToOutput), input);
-        }
-        
-        /*
-         * Modified version of: http://codebuckets.com/2017/10/19/getting-the-root-directory-path-for-net-core-applications/
-         */
-        private string GetApplicationRoot()
-        {
-            var exePath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
-            Regex appPathMatcher= new Regex(@"^(.*?)FYP"); //TODO rename FYP -> PDGToolkit (repo name)
-            var appRoot= appPathMatcher.Match(exePath).Value;
-            return appRoot;
+            await File.WriteAllTextAsync(settings.RelativePathToOutput.ToAbsolutePathFromPathRelativeToSolutionRoot(), input);
         }
     }
 }
