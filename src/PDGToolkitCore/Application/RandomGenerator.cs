@@ -6,6 +6,9 @@ using PDGToolkitCore.Infrastructure;
 
 namespace PDGToolkitCore.Application
 {
+    /**
+     * A primitive Generator used to develop and verify generator loading features
+     */
     public class RandomGenerator : IGenerator
     {
         private readonly Random random = new Random();
@@ -22,30 +25,32 @@ namespace PDGToolkitCore.Application
 
         public async Task<Grid> GenerateGridAsync()
         {
-            //TODO: make RoomBuilder async
-            var room = RoomBuilder.Create()
+            var room = await RoomBuilder.Create()
                 .WithHeight(Height)
                 .WithWidth(Width)
                 .WithOutsideWalls()
                 .WithInsideTiles(wallThickness => CreateFloor(wallThickness))
-                .Build();
+                .BuildAsync();
 
             return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
                 new TileConfig(settings.TileSettings.Size), room.Tiles);
         }
 
-        private List<Tile> CreateFloor(int wallThickness)
+        private async Task<List<Tile>> CreateFloor(int wallThickness)
         {
-            var tiles = new List<Tile>();
-            for (var x = wallThickness; x < Width - wallThickness; x++)
+            return await Task.Run((() =>
             {
-                for (var y = wallThickness; y < Height - wallThickness; y++)
+                var tiles = new List<Tile>();
+                for (var x = wallThickness; x < Width - wallThickness; x++)
                 {
-                    tiles.Add(new Tile(GenerateRandomTileType(), new Position(x, y)));
+                    for (var y = wallThickness; y < Height - wallThickness; y++)
+                    {
+                        tiles.Add(new Tile(GenerateRandomTileType(), new Position(x, y)));
+                    }
                 }
-            }
-            
-            return tiles;
+
+                return tiles;
+            }));
         }
 
         private TileType GenerateRandomTileType()

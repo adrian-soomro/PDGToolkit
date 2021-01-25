@@ -25,20 +25,30 @@ namespace PDGToolkitCore.Application
             Height = settings.GridSettings.Height / settings.TileSettings.Size;
         }
 
+        /**
+         * Generates a Grid asynchronously, using the RoomBuilder class.
+         * It does so by generating a room in the size of the dungeon and fills it using <see cref="GenerateRooms"/> function,
+         */
         public async Task<Grid> GenerateGridAsync()
         {
-            var room = RoomBuilder.Create()
+            var room = await RoomBuilder.Create()
                 .WithHeight(Height)
                 .WithWidth(Width)
                 .WithInsideTiles(wallThickness => GenerateRooms(wallThickness))
                 .WithOutsideWalls()
-                .Build();
+                .BuildAsync();
             
             return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
                 new TileConfig(settings.TileSettings.Size), room.Tiles);
         }
 
-        private List<Tile> GenerateRooms(int wallThickness)
+        /**
+         * Select random points in the room using the <see cref="OneInXChanceToGenerateARoom"/> function,
+         * then create new, smaller rooms of varying size <see cref="SelectRoomWidth"/> & <see cref="SelectRoomHeight"/>
+         * and lastly, use <see cref="ITileService"/> to remove merge overlapping rooms into one bigger, more naturally
+         * looking room.
+         */
+        private async Task<List<Tile>> GenerateRooms(int wallThickness)
         {
             var tiles = new List<Tile>();
             for (var x = wallThickness; x < Width - wallThickness; x++)
@@ -47,14 +57,14 @@ namespace PDGToolkitCore.Application
                 {
                     if (OneIn(OneInXChanceToGenerateARoom))
                     {
-                        var room = RoomBuilder.Create()
+                        var room = await RoomBuilder.Create()
                             .WithWidth(SelectRoomWidth)
                             .WithHeight(SelectRoomHeight)
                             .WithStartingPosition(new Position(x, y))
                             .WithOutsideWalls()
                             .WithInsideTilesOfType(TileType.Floor)
-                            .Build();
-                        
+                            .BuildAsync();
+                    
                         tiles.AddRange(room.Tiles);
                     }
                 }
@@ -73,6 +83,11 @@ namespace PDGToolkitCore.Application
             return random.Next(MinimumRoomSize, maxLength);
         }
 
+        /**
+         * Perform a pseudo-random roll, having one in <paramref name="chance"/> to succeed,
+         * by generating a number between 0 and <paramref name="chance"/> - 1.
+         * <returns> true if roll is 0, false otherwise</returns>
+         */
         private bool OneIn(int chance)
         {
             return random.Next(chance) < 1;
