@@ -31,11 +31,14 @@ npm install widdershins
 # generate md file
 ./node_modules/widdershins/widdershins.js --search false --summary ./swaggerfile.json -o ./schema_doc.md
 
-# trim generated file
-awk '/# Schema overview/{p=1}p' ./schema_doc.md > ./temp_schema_doc.md 
+# trim generated file 
+sed -n '/# Schemas/,$p' ./schema_doc.md  | sed '1d' > ./temp_schema_doc.md 
 
 # remove everything after a keyword and put it in a temp file
 sed -n '/# Schema overview/q;p' ../README.md > ./temp_readme.md
+
+# insert keyword back in 
+echo "# Schema overview" >> ./temp_readme.md
 
 # append trimmed generated file to the end of temp file
 cat ./temp_schema_doc.md >> ./temp_readme.md
