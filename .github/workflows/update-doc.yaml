@@ -24,4 +24,3 @@ jobs:
         set -e
     - name: Debug
       run: printenv | sort
-      if: env.CHANGED == 1
