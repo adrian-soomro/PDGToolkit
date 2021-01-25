@@ -18,7 +18,9 @@ jobs:
       shell: bash
     - name: Check for changes
       run: |
-        git diff --exit-code ./README.md &> /dev/null 
+        set +e
+        git diff --exit-code ./README.md
+        set -e
         export CHANGED=$?
     - name: Debug
       run: printenv | sort
