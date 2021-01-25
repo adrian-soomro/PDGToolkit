@@ -20,17 +20,10 @@ jobs:
       run: |
         set +e
         git diff --exit-code ./README.md
-        echo $? > ./changed.txt
+        echo "CHANGED=$?" >> $GITHUB_ENV
         set -e
     - name: Debug
+      if: env.CHANGED == 1
       run: |
-        CHANGED=$(cat ./changed.txt)
-
-        if [ $CHANGED -eq 1 ]; then
-          echo "file has been changed"
-          printenv | sort
-          exit 0
-        else
-          echo "file has NOT been changed"
-          exit 0
-        fi
+        printenv | sort
+         
