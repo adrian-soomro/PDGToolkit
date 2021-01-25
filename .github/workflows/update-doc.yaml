@@ -20,7 +20,15 @@ jobs:
       run: |
         set +e
         git diff --exit-code ./README.md
-        export CHANGED=$?
+        echo $? > ./changed.txt
         set -e
     - name: Debug
-      run: printenv | sort
+      run: |
+        if [ $CHANGED == 1 ]; then
+          echo "file has been changed"
+          printenv | sort
+          exit 0
+        else
+          echo "file has NOT been changed"
+          exit 0
+        fi
