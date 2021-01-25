@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PDGToolkitCore.Domain.Models;
 
 namespace PDGToolkitCore.Application
 {
+    /**
+     * This builder offers to build <see cref="Room"/> asynchronously.
+     * Inspiration on how to tackle asynchronous builder pattern: https://stackoverflow.com/questions/25302178/using-async-tasks-with-the-builder-pattern
+     */
     public class RoomBuilder
     {
         private const int IndexOffset = 1;
@@ -13,6 +18,17 @@ namespace PDGToolkitCore.Application
         private Position startingPosition;
         private List<Tile> tiles;
         
+        /**
+         * The private fields below represent tasks that return a List of tiles when completed.
+         * By default, they return an empty list, however, when the user calls one of hte builder's methods
+         * eg <see cref="WithOutsideWalls"/>, the field now points to a task that's returned by
+         * <see cref="CreateOuterWallsAsync"/> method and when <see cref="BuildAsync"/> is called, it awaits the result,
+         * appending it to the list of created tiles.
+         */
+        private Task<List<Tile>> createOutsideWallsTask = Task.FromResult(new List<Tile>());
+        private Task<List<Tile>> callRoomFillingFunctionTask = Task.FromResult(new List<Tile>());
+        private Task<List<Tile>> fillInsideWithTilesOfTypeTask = Task.FromResult(new List<Tile>());
+
         private RoomBuilder()
         {
             startingPosition = new Position(0,0);
@@ -51,65 +67,74 @@ namespace PDGToolkitCore.Application
 
         public RoomBuilder WithOutsideWalls()
         {
-            tiles.AddRange(CreateOuterWalls());
+            createOutsideWallsTask = CreateOuterWallsAsync();
             return this;
         }
-
-        public RoomBuilder WithInsideTiles(Func<int, List<Tile>> roomFillingFunction)
+        
+        public RoomBuilder WithInsideTiles(Func<int, Task<List<Tile>>> roomFillingFunction)
         {
-            tiles.AddRange(roomFillingFunction.Invoke(wallThickness));
+            callRoomFillingFunctionTask = roomFillingFunction.Invoke(wallThickness);
             return this;
         }
         
         public RoomBuilder WithInsideTilesOfType(TileType type)
         {
-            tiles.AddRange(FillInsideTilesWith(type));
+            fillInsideWithTilesOfTypeTask= FillInsideTilesWithAsync(type);
             return this;
         }
 
-        public Room Build()
+        private async Task<List<Tile>> CreateOuterWallsAsync()
         {
+            return await Task.Run(() =>
+            {
+                var outerWalls = new List<Tile>();
+                for (var thickness = 0; thickness < wallThickness; thickness++)
+                {
+                    for (var x = startingPosition.X; x < startingPosition.X + width; x++)
+                    {
+                        outerWalls.Add(new Tile(TileType.Wall, new Position(x, startingPosition.Y + thickness)));
+                        outerWalls.Add(new Tile(TileType.Wall, new Position(x, startingPosition.Y + height - IndexOffset - thickness)));
+                    }
+                
+                    for (var y = startingPosition.Y; y < startingPosition.Y + height; y++)
+                    {
+                        outerWalls.Add(new Tile(TileType.Wall, new Position(startingPosition.X + thickness, y)));
+                        outerWalls.Add(new Tile(TileType.Wall, new Position(startingPosition.X + width - IndexOffset - thickness, y)));
+                    }
+                }
+            
+                return outerWalls;
+            });
+        }
+
+        private async Task<List<Tile>> FillInsideTilesWithAsync(TileType type)
+        {
+            return await Task.Run(() =>
+            {
+                var insideTiles = new List<Tile>();
+                for (var x = startingPosition.X + wallThickness;
+                    x < startingPosition.X + width - wallThickness;
+                    x++)
+                {
+                    for (var y = startingPosition.Y + wallThickness;
+                        y < startingPosition.Y + height - wallThickness;
+                        y++)
+                    {
+                        insideTiles.Add(new Tile(type, new Position(x, y)));
+                    }
+                }
+
+                return insideTiles;
+            });
+        }
+
+        public async Task<Room> BuildAsync()
+        {
+            tiles.AddRange(await fillInsideWithTilesOfTypeTask);
+            tiles.AddRange(await callRoomFillingFunctionTask);
+            tiles.AddRange(await createOutsideWallsTask);
             return new Room(width, height, startingPosition, tiles);
         }
-        
-        private List<Tile> CreateOuterWalls()
-        {
-            var outerWalls = new List<Tile>();
-            for (var thickness = 0; thickness < wallThickness; thickness++)
-            {
-                for (var x = startingPosition.X; x < startingPosition.X + width; x++)
-                {
-                    outerWalls.Add(new Tile(TileType.Wall, new Position(x, startingPosition.Y + thickness)));
-                    outerWalls.Add(new Tile(TileType.Wall, new Position(x, startingPosition.Y + height - IndexOffset - thickness)));
-                }
-                
-                for (var y = startingPosition.Y; y < startingPosition.Y + height; y++)
-                {
-                    outerWalls.Add(new Tile(TileType.Wall, new Position(startingPosition.X + thickness, y)));
-                    outerWalls.Add(new Tile(TileType.Wall, new Position(startingPosition.X + width - IndexOffset - thickness, y)));
-                }
-            }
-            
-            return outerWalls;
-        }
-
-        private List<Tile> FillInsideTilesWith(TileType type)
-        {
-            var insideTiles = new List<Tile>();
-            for (var x = startingPosition.X + wallThickness;
-                x < startingPosition.X + width - wallThickness;
-                x++)
-            {
-                for (var y = startingPosition.Y + wallThickness;
-                    y < startingPosition.Y + height - wallThickness;
-                    y++)
-                {
-                    insideTiles.Add(new Tile(type, new Position(x, y)));
-                }
-            }
-
-            return insideTiles;
-        }
-
     }
+    
 }
