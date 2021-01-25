@@ -20,8 +20,8 @@ jobs:
       run: |
         set +e
         git diff --exit-code ./README.md
-        set -e
         export CHANGED=$?
+        set -e
     - name: Debug
       run: printenv | sort
       if: env.CHANGED == 1
