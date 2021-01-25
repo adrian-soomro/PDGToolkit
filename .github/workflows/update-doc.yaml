@@ -3,7 +3,7 @@ name: "Update documentation"
 on:
   push:
     branches:
-      - bugfix/self-updating-docs
+      - master
 
 jobs:
   build:
@@ -22,8 +22,17 @@ jobs:
         git diff --exit-code ./README.md
         echo "CHANGED=$?" >> $GITHUB_ENV
         set -e
-    - name: Debug
+    - name: Commit files
       if: env.CHANGED == 1
       run: |
-        printenv | sort
-         
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add ./README.md && git commit -m "Automated Documentation Update"
+        
+    - name: Push changes
+      if: env.CHANGED == 1
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+
