@@ -24,7 +24,9 @@ jobs:
         set -e
     - name: Debug
       run: |
-        if [ $CHANGED == 1 ]; then
+        CHANGED=$(cat ./changed.txt)
+
+        if [ $CHANGED -eq 1 ]; then
           echo "file has been changed"
           printenv | sort
           exit 0
