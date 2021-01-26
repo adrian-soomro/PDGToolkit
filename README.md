@@ -4,7 +4,7 @@ Cross platform, game-engine independant .Net Core 3 Application for procedurally
 
 ## Requirements
 - [.Net Core 3.1.301+](https://dotnet.microsoft.com/download)
-- [Node v12.18.3+](https://nodejs.org/en/)
+- [Node v14.15.0+](https://nodejs.org/en/)
   
 **You can use either the latest version of Visual Studio, JetBrain's Rider or .NET CLI for Windows, Mac and Linux**.
 

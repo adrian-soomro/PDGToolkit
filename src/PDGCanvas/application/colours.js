@@ -4,8 +4,10 @@ const colours = {
     RED: 'rgb(204,0,0)',
 }
 
-export const setColour = (tileType) => ({
-    "Floor": colours.GREY,
-    "Wall": colours.BLACK,
-    "Obstacle": colours.RED
-  })[tileType]
+module.exports = {
+    setColour: (tileType) => ({
+        "Floor": colours.GREY,
+        "Wall": colours.BLACK,
+        "Obstacle": colours.RED
+      })[tileType]
+}
