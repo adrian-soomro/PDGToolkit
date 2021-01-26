@@ -1,15 +1,10 @@
-var express = require('express');
-var router = express.Router();
-const path = require('path');
-const config = require('../config');
+const express = require('express');
+const renderer = require('../application/renderer')
+const router = express.Router();
 
 router.get('/', function(req, res, next) {
-  res.render('index');
+  let dungeonImage = renderer.renderDungeonAsBase64EncodedImg()
+  res.render('partials/main', { heading: "Generated Dungeon", img: dungeonImage });
 });
-
-router.get('/data', function(req, res, next) {
-  res.sendFile(path.resolve(config.relativePathToDungeon));
-});
-
 
 module.exports = router;

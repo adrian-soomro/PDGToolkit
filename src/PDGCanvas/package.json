@@ -3,35 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm run build && node ./scripts/www",
-    "build": "browserify ./application/main.js -o ./public/js/bundle.js"
+    "start": "node app.js"
   },
   "dependencies": {
+    "canvas": "^2.6.1",
     "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
     "express": "~4.16.1",
-    "http-errors": "~1.6.3",
-    "morgan": "~1.9.1",
-    "pug": "2.0.0-beta11"
-  },
-  "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-es2015": "^6.24.1",
-    "babelify": "^8.0.0",
-    "browserify": "^16.5.2",
-    "fs": "0.0.1-security",
-    "request": "^2.88.2"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "babelify",
-        {
-          "presets": [
-            "es2015"
-          ]
-        }
-      ]
-    ]
+    "express-handlebars": "^5.2.0"
   }
 }
