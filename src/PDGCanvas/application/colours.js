@@ -4,10 +4,18 @@ const colours = {
     RED: 'rgb(204,0,0)',
 }
 
-module.exports = {
-    setColour: (tileType) => ({
+function constructColourMappingObject() {
+    return {
         "Floor": colours.GREY,
         "Wall": colours.BLACK,
         "Obstacle": colours.RED
-      })[tileType]
+    }
+}
+
+module.exports = {
+    setColour: (tileType) => (constructColourMappingObject())[tileType],
+
+    getColourMapping: () => {
+        return constructColourMappingObject()
+    }
 }
