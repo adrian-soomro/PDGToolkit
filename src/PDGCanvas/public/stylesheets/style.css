@@ -6,3 +6,16 @@ body {
 a {
   color: #00B7FF;
 }
+
+.box{ 
+	width:14px; 
+  height:14px; 
+  display: inline-block;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+}
+
+ .explanation {
+  margin-left: 5px;
+}

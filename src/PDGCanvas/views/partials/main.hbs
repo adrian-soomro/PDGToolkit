@@ -1,3 +1,9 @@
 <h1>{{heading}}</h1>
-<canvas id="canvas"></canvas>
+<h2> Legend </h2>
+
+{{#each colourMapping}}
+    <div class='box' style="background-color: {{this}} ;"></div><span class="explanation">{{@key}}</span> <br>
+{{/each}}
+
+<br>
 <img src="{{img}}"/>
