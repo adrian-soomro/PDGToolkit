@@ -5,7 +5,7 @@ on:
     branches: [ feature/13-semver ]
 
 jobs:
-  build:
+  tagging:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,8 +37,14 @@ jobs:
     
     - name: "Display semver"
       run: |
-        printenv | sort
         echo $VERSION
+      env: 
+        VERSION: ${{ steps.semver.outputs.version }}
+
+    - name: "Create a new tag"
+      run: |
+        git tag "v$VERSION"
+        git push --tags
       env: 
         VERSION: ${{ steps.semver.outputs.version }}
 
