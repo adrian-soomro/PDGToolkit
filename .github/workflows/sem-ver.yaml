@@ -19,7 +19,7 @@ jobs:
       id: semver
       with:
         # The prefix to use to identify tags
-        branch: "master"
+        branch: "feature/13-semver"
         # The prefix to use to identify tags
         tag_prefix: "v"
         # A string which, if present in a git commit, indicates that a change represents a
