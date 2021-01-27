@@ -14,7 +14,9 @@ jobs:
       with:
         fetch-depth: 0
 
-    - uses: paulhatch/semantic-version@v3.3
+    - name: "Get Semantic Version"
+      uses: paulhatch/semantic-version@v3.3
+      id: semver
       with:
         # The prefix to use to identify tags
         branch: "master"
@@ -32,3 +34,13 @@ jobs:
         short_tags: true
         # If this is set to true, *every* commit will be treated as a new version.
         bump_each_commit: false
+    
+    - name: "Display semver"
+      run: |
+        printenv | sort
+        echo $VERSION
+      env: 
+        VERSION: ${{ steps.semver.outputs.version }}
+
+
+
