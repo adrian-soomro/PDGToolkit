@@ -2,7 +2,7 @@ name: "Semver"
 
 on:
   push:
-    branches: [ feature/13-semver ]
+    branches: [ master ]
 
 jobs:
   tagging:
@@ -19,7 +19,7 @@ jobs:
       id: semver
       with:
         # The prefix to use to identify tags
-        branch: "feature/13-semver"
+        branch: "master"
         # The prefix to use to identify tags
         tag_prefix: "v"
         # A string which, if present in a git commit, indicates that a change represents a
@@ -34,12 +34,6 @@ jobs:
         short_tags: true
         # If this is set to true, *every* commit will be treated as a new version.
         bump_each_commit: false
-    
-    - name: "Display semver"
-      run: |
-        echo $VERSION
-      env: 
-        VERSION: ${{ steps.semver.outputs.version }}
 
     - name: "Create a new tag"
       run: |
