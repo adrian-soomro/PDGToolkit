@@ -13,6 +13,9 @@ namespace PDGToolkitCore.Infrastructure
             var exePath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
             Regex appPathMatcher = new Regex(@"^(.*?)(PDGToolkit(\\|\/))+");
             var appRoot = appPathMatcher.Match(exePath).Value;
+            if (string.IsNullOrEmpty(appRoot))
+                appRoot = exePath;
+            
             return Path.Combine(appRoot, relativeFilePath);
         }
     }
