@@ -4,12 +4,12 @@ using PDGToolkitCore.API;
 
 namespace PDGToolkitCLI.Validation
 {
-    class IsValidGeneratorName : ValidationAttribute
+    internal class IsValidGeneratorName : ValidationAttribute
     {
-        public IsValidGeneratorName()
-            : base(
-"The value for {0} must be one of available generators, option -l | --list to see all available generators"
-                )
+        private const string CustomErrorMessage =
+            "The value for {0} must be one of available generators, option -l | --list to see all available generators";
+        
+        public IsValidGeneratorName() : base(CustomErrorMessage)
         {
         }
 
@@ -24,5 +24,4 @@ namespace PDGToolkitCLI.Validation
             return ValidationResult.Success;
         }
     }
-    
 }
