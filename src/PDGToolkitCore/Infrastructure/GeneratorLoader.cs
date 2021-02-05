@@ -4,7 +4,7 @@ using PDGToolkitCore.Application;
 
 namespace PDGToolkitCore.Infrastructure
 {
-    public static class GeneratorLoader
+    internal static class GeneratorLoader
     {
         public static IGenerator LoadGenerator(IEnumerable<IGenerator> generators, string generatorName)
         {
