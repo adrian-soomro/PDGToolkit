@@ -1,6 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
+using PDGToolkitCLI.Validation;
 using PDGToolkitCore.API;
 using PDGToolkitCore.Infrastructure;
 
@@ -12,6 +15,7 @@ namespace PDGToolkitCLI
             => CommandLineApplication.Execute<Program>(args);
         
         [Option(Description = "The generator to load")]
+        [IsValidGeneratorName]
         public string Generator { get; } = "TeenyZonesGenerator";
         
         [Option("-p|--path", Description = @"Relative path to where the output file should be stored, 
