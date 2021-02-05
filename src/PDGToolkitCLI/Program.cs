@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using PDGToolkitCLI.Validation;
@@ -31,7 +30,7 @@ namespace PDGToolkitCLI
         public int DungeonHeight { get; } = 720;
 
         [Option("-l|--list", Description = @"Lists all generators in the toolkit.")]
-        public bool ListGenerators { get; }
+        public bool ListGenerators { get; } = false;
         
         private async Task OnExecuteAsync()
         {
@@ -41,10 +40,13 @@ namespace PDGToolkitCLI
                 await ResponseFormatter.RespondWithCollectionAsync("Currently available generators are:", generators);
                 Environment.Exit(0);
             }
-            
-            SettingsHandler.EditOutputRelativePathSetting(PathToOutputFile);
-            SettingsHandler.EditHeightSetting(DungeonHeight);
-            SettingsHandler.EditWidthSetting(DungeonWidth);
+
+            CustomSettingsHandler.Create()
+                .SetRelativePath(PathToOutputFile)
+                .SetWidth(DungeonWidth)
+                .SetHeight(DungeonHeight)
+                .PersistChanges();
+
             var runner = Startup.InitialiseRunner(Generator);
             await runner.Run();
         }
