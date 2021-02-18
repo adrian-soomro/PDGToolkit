@@ -1,6 +1,6 @@
 ﻿namespace PDGToolkitCore.Domain.Models
 {
-    public class Tile
+    public struct Tile
     {
         public TileType Type { get; }
         public Position Position { get; }
