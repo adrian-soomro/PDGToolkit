@@ -1,26 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using PDGToolkitCore.Domain.Models;
 using PDGToolkitCore.Infrastructure;
+using PDGToolkitCore.Infrastructure.DebugExtensions;
 
 namespace PDGToolkitCore.Application
 {
-    public class TeenyZonesGenerator : IGenerator
+    internal class TeenyZonesGenerator : IGenerator
     {
         private readonly Settings settings;
         private readonly Random random = new Random();
         private readonly ITileService tileService;
+        private readonly IRoomService roomService;
         private const int MinimumRoomSize = 3;
         private const int OneInXChanceToGenerateARoom = 600;
 
         private int Width { get; }
         private int Height { get; }
         
-        public TeenyZonesGenerator(Settings settings, ITileService tileService)
+        public TeenyZonesGenerator(Settings settings, ITileService tileService, IRoomService roomService)
         {
             this.settings = settings;
             this.tileService = tileService;
+            this.roomService = roomService;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;
             Height = settings.GridSettings.Height / settings.TileSettings.Size;
         }
@@ -37,7 +41,7 @@ namespace PDGToolkitCore.Application
                 .WithInsideTiles(wallThickness => GenerateRooms(wallThickness))
                 .WithOutsideWalls()
                 .BuildAsync();
-            
+          
             return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
                 new TileConfig(settings.TileSettings.Size), room.Tiles);
         }
@@ -50,7 +54,8 @@ namespace PDGToolkitCore.Application
          */
         private async Task<List<Tile>> GenerateRooms(int wallThickness)
         {
-            var tiles = new List<Tile>();
+            var allRooms = new List<Room>();
+            
             for (var x = wallThickness; x < Width - wallThickness; x++)
             {
                 for (var y = wallThickness; y < Height - wallThickness; y++)
@@ -64,12 +69,25 @@ namespace PDGToolkitCore.Application
                             .WithOutsideWalls()
                             .WithInsideTilesOfType(TileType.Floor)
                             .BuildAsync();
-                    
-                        tiles.AddRange(room.Tiles);
+
+                        for (var i = 0; i < allRooms.Count; i++)
+                        {
+                            var existingRoom = allRooms[i];
+                            if (roomService.AreRoomsOverlapping(room, existingRoom))
+                            {
+                                allRooms.RemoveAt(i);
+                                room = roomService.MergeRooms(new List<Room> {existingRoom, room});
+                            }
+                        }
+                        
+                        allRooms.Add(room);
                     }
                 }
             }
 
+            var tiles = allRooms.SelectMany(r => r.Tiles).ToList();
+            allRooms.ListRooms();
+            
             tiles = tileService.RemoveOverlappingDuplicateWalls(tiles);
             return tileService.RemoveSharedWalls(tiles);
         }
