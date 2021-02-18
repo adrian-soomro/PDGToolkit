@@ -5,8 +5,7 @@ namespace PDGToolkitCore.Application
 {
     internal interface IRoomService
     {
-        public IEnumerable<Room> GetAllOverlappingRooms(IEnumerable<Room> rooms);
-        public Room MergeRooms(IEnumerable<Room> rooms);
+        public Room MergeRooms(Room r1, Room r2);
 
         IEnumerable<Room> GetRoomsByPosition(IEnumerable<Room> rooms, Position position);
 

@@ -51,16 +51,6 @@ namespace PDGToolkitCore.UnitTests
         }
 
         [Test]
-        public void OverlappingRooms_Returns_AllOverlappingRooms()
-        {
-            var overlappingRooms = roomService.GetAllOverlappingRooms(rooms).ToList();
-
-            overlappingRooms.Should().BeEquivalentTo( new List<Room>{ rooms[0], rooms[1]});
-            overlappingRooms.Count().Should().Be(2);
-            
-        }
-        
-        [Test]
         public void PositionOutsideRooms_Returns_EmptyGuid()
         {
             var foundRooms = roomService.GetRoomsByPosition(rooms, new Position(99, 99));
@@ -74,13 +64,10 @@ namespace PDGToolkitCore.UnitTests
         [Test]
         public void MergingRooms_Succeeds()
         {
-            var overlappingRooms = new List<Room> {rooms[0], rooms[1]};
+            var newRoom = roomService.MergeRooms(rooms[0], rooms[1]);
             
-            var newRoom = roomService.MergeRooms(overlappingRooms);
-            var newRoomTiles = newRoom.Tiles;
-
             newRoom.Id.Should().Be(rooms[0].Id);
-            newRoomTiles.Should().BeEquivalentTo(overlappingRooms.SelectMany(r => r.Tiles));
+            newRoom.Tiles.Count().Should().BeLessThan(rooms[0].Tiles.Count + rooms[1].Tiles.Count);
         }
 
         [Test]

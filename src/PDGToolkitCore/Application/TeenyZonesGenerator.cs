@@ -76,7 +76,7 @@ namespace PDGToolkitCore.Application
                             if (roomService.AreRoomsOverlapping(room, existingRoom))
                             {
                                 allRooms.RemoveAt(i);
-                                room = roomService.MergeRooms(new List<Room> {existingRoom, room});
+                                room = roomService.MergeRooms(existingRoom, room);
                             }
                         }
                         
@@ -87,9 +87,8 @@ namespace PDGToolkitCore.Application
 
             var tiles = allRooms.SelectMany(r => r.Tiles).ToList();
             allRooms.ListRooms();
-            
-            tiles = tileService.RemoveOverlappingDuplicateWalls(tiles);
-            return tileService.RemoveSharedWalls(tiles);
+
+            return tiles;
         }
 
         // TODO: Refactor magic number to a meaningful variable
