@@ -14,7 +14,6 @@ namespace PDGToolkitCore.Application
             var allTiles = allRooms.SelectMany(r => r.Tiles).ToList();
                 
             var allDupePositions = GetPositionsOfDuplicateTiles(allTiles).Keys.ToList();
-
             foreach (var dupePosition in allDupePositions)
             {
                 var numRoomSharingDupePosition = GetRoomsByPosition(allRooms, dupePosition).ToList();
@@ -28,6 +27,7 @@ namespace PDGToolkitCore.Application
         public Room MergeRooms(Room r1, Room r2)
         {
             var allTiles = r1.Tiles.Concat(r2.Tiles).ToList();
+            allTiles = UncoverFloorTiles(allTiles);
 
             if (r1.Equals(r2)) 
                 throw new ArgumentException("Can't merge a room with itself!");
@@ -58,6 +58,21 @@ namespace PDGToolkitCore.Application
                    foundRooms.Add(room);
             } 
             return foundRooms;
+        }
+
+        /**
+         * Removes any tiles that are in the same position as floor tiles.
+         */
+        private List<Tile> UncoverFloorTiles(List<Tile> tiles)
+        {
+            var dupePositions = GetPositionsOfDuplicateTiles(tiles).Keys.ToList();
+            var tilesWithDupesInTHeirPositions = tiles.FindAll(t => dupePositions.Contains(t.Position)).Where(t => t.Type.Equals(TileType.Floor)).ToList();
+            var floorTilesWithDupesInTheirPositions = tilesWithDupesInTHeirPositions.Where(t => t.Type.Equals(TileType.Floor)).ToList();
+            foreach (var tile in floorTilesWithDupesInTheirPositions)
+            {
+                tiles.ReplaceTilesWithOtherTile(new Tile(TileType.Floor, tile.Position));
+            }
+            return tiles;
         }
         
         private Dictionary<Position, int> GetPositionsOfDuplicateTiles(List<Tile> tiles)
