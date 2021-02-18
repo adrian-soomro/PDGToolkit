@@ -28,7 +28,6 @@ namespace PDGToolkitCore.Infrastructure
             services.AddTransient<ISerialiser, JsonSerialiser>();
             services.AddTransient<IFileWriter, FileWriter>();
             services.AddSingleton<IRunner, Runner>();
-            services.AddTransient<ITileService, TileService>();
             services.AddTransient<IRoomService, RoomService>();
             
             return services;

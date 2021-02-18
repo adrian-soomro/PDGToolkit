@@ -12,7 +12,6 @@ namespace PDGToolkitCore.Application
     {
         private readonly Settings settings;
         private readonly Random random = new Random();
-        private readonly ITileService tileService;
         private readonly IRoomService roomService;
         private const int MinimumRoomSize = 3;
         private const int OneInXChanceToGenerateARoom = 600;
@@ -20,10 +19,9 @@ namespace PDGToolkitCore.Application
         private int Width { get; }
         private int Height { get; }
         
-        public TeenyZonesGenerator(Settings settings, ITileService tileService, IRoomService roomService)
+        public TeenyZonesGenerator(Settings settings, IRoomService roomService)
         {
             this.settings = settings;
-            this.tileService = tileService;
             this.roomService = roomService;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;
             Height = settings.GridSettings.Height / settings.TileSettings.Size;

@@ -36,7 +36,7 @@ namespace PDGToolkitCore.Application
             {
                 var sharedPositionsBetweenRooms = GetRoomsByPosition(new List<Room> {r1, r2}, t.Position);
                 
-                return sharedPositionsBetweenRooms.Contains(r1) && t.Type.Equals(TileType.Wall) && HasTwoAdjacentFloorTiles(allTiles, t.Position);
+                return sharedPositionsBetweenRooms.Contains(r1) && t.Type.Equals(TileType.Wall) && t.HasTwoAdjacentFloorTiles(allTiles);
             });
 
             foreach (var tile in overlappingWalls)
@@ -67,19 +67,6 @@ namespace PDGToolkitCore.Application
                 .Select(y => new { Element = y.Key, Count = y.Count()})
                 .ToDictionary(x => x.Element, y => y.Count);
         }
-        
-        private bool HasTwoAdjacentFloorTiles(List<Tile> allTiles, Position positionOfTileInQuestion)
-        {
-            var up = new Position(positionOfTileInQuestion.X, positionOfTileInQuestion.Y + 1);
-            var down = new Position(positionOfTileInQuestion.X, positionOfTileInQuestion.Y - 1);
-            var left = new Position(positionOfTileInQuestion.X - 1, positionOfTileInQuestion.Y);
-            var right = new Position(positionOfTileInQuestion.X + 1, positionOfTileInQuestion.Y);
-            var adjacentFloorTiles = allTiles.Where(t => t.Type.Equals(TileType.Floor)).ToList().FindAll(t =>
-                t.Position.Equals(up) || t.Position.Equals(down) || t.Position.Equals(left) ||
-                t.Position.Equals(right));
 
-            var adjacentFloorPositions = adjacentFloorTiles.Select(a => a.Position).ToList(); 
-            return adjacentFloorPositions.Contains(up) && adjacentFloorPositions.Contains(down) || adjacentFloorPositions.Contains(right) && adjacentFloorPositions.Contains(left);
-        }
     }
 }
