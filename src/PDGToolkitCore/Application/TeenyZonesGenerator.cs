@@ -11,9 +11,9 @@ namespace PDGToolkitCore.Application
     internal class TeenyZonesGenerator : IGenerator
     {
         private readonly Settings settings;
-        private readonly Random random = new Random();
+        private readonly Random random;
         private readonly IRoomService roomService;
-        private const int MinimumRoomSize = 3;
+        private const int MinimumRoomSize = 4;
         private const int OneInXChanceToGenerateARoom = 600;
 
         private int Width { get; }
@@ -21,6 +21,9 @@ namespace PDGToolkitCore.Application
         
         public TeenyZonesGenerator(Settings settings, IRoomService roomService)
         {
+            var seed = Guid.NewGuid().GetHashCode();
+            random = new Random(seed);
+            Console.Out.WriteLine($"Random seed for this run: {seed}");
             this.settings = settings;
             this.roomService = roomService;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;
@@ -77,7 +80,6 @@ namespace PDGToolkitCore.Application
                                 room = roomService.MergeRooms(existingRoom, room);
                             }
                         }
-                        
                         allRooms.Add(room);
                     }
                 }
