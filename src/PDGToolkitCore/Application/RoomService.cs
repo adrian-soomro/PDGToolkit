@@ -10,18 +10,17 @@ namespace PDGToolkitCore.Application
     {
         public bool AreRoomsOverlapping(Room firstRoom, Room secondRoom)
         {
-            var allRooms = new List<Room>{firstRoom, secondRoom};
-            var allTiles = allRooms.SelectMany(r => r.Tiles).ToList();
-                
-            var allDupePositions = GetPositionsOfDuplicateTiles(allTiles).Keys.ToList();
-            foreach (var dupePosition in allDupePositions)
-            {
-                var numRoomSharingDupePosition = GetRoomsByPosition(allRooms, dupePosition).ToList();
-                if (numRoomSharingDupePosition.Count() > 1)
-                    return true;
-            }
-
-            return false;
+            var sharedFloorTiles = GetOverlappingFloorTiles(firstRoom, secondRoom);
+            return sharedFloorTiles.Count() > 1;
+        }
+        
+        private List<Tile> GetOverlappingFloorTiles(Room firstRoom, Room secondRoom)
+        {
+            var r1Tiles = firstRoom.Tiles;
+            var r2Tiles = secondRoom.Tiles;
+            
+            var overlappingTiles = r1Tiles.Intersect(r2Tiles).Where(t => t.Type.Equals(TileType.Floor)).ToList();
+            return overlappingTiles;
         }
         
         public Room MergeRooms(Room r1, Room r2)
@@ -58,6 +57,51 @@ namespace PDGToolkitCore.Application
                    foundRooms.Add(room);
             } 
             return foundRooms;
+        }
+
+        public IEnumerable<Room> MergeAllRooms(IEnumerable<Room> rooms)
+        {
+          
+                var result = new HashSet<Room>();
+                var allRooms = rooms.ToList();
+                var depleted = new List<Room>();
+                var uniqueRoomPairs = allRooms.SelectMany((first, i) => allRooms.Skip(i + 1).Select(second => (first, second))).ToList();
+                foreach (var (first, second) in uniqueRoomPairs)
+                {
+                    if (depleted.Contains(first) || depleted.Contains(second))
+                        continue;
+                
+                    Console.Out.WriteLine($"Comparing room {allRooms.IndexOf(first) +1 }, and {allRooms.IndexOf(second) +1}");
+                    if (AreRoomsOverlapping(first, second))
+                    {
+                        Console.Out.WriteLine($"Merging room {allRooms.IndexOf(first) +1 }, and {allRooms.IndexOf(second) +1}");
+                        result.Add(MergeRooms(first, second));
+                        depleted.Add(first);
+                        depleted.Add(second);
+                        continue;
+                    }
+                    result.Add(first);
+                    Console.Out.WriteLine($"Tried to add room #{allRooms.IndexOf(first) +1} to results, there are {result.Count()} elements in results atm");
+                    foreach (var room in result)
+                    {
+                        Console.Out.Write($"{room.Id}, ");
+                    }
+                    Console.Out.WriteLine("");
+                }
+
+                if (!depleted.Contains(allRooms.Last()))
+                {
+                    result.Add(allRooms.Last());
+                }
+
+                Console.Out.WriteLine($"End of MergeAllRooms(), started with {rooms.Count()}, ended with {result.Count()}");
+
+                if (result.Count() != rooms.Count())
+                {
+                    return MergeAllRooms(result);
+                }
+
+                return result;
         }
 
         /**

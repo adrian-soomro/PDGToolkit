@@ -10,5 +10,7 @@ namespace PDGToolkitCore.Application
         IEnumerable<Room> GetRoomsByPosition(IEnumerable<Room> rooms, Position position);
 
         bool AreRoomsOverlapping(Room firstRoom, Room secondRoom);
+
+        IEnumerable<Room> MergeAllRooms(IEnumerable<Room> rooms);
     }
 }

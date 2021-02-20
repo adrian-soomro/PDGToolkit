@@ -71,24 +71,14 @@ namespace PDGToolkitCore.Application
                             .WithInsideTilesOfType(TileType.Floor)
                             .BuildAsync();
 
-                        for (var i = 0; i < allRooms.Count; i++)
-                        {
-                            var existingRoom = allRooms[i];
-                            if (roomService.AreRoomsOverlapping(room, existingRoom))
-                            {
-                                allRooms.RemoveAt(i);
-                                room = roomService.MergeRooms(existingRoom, room);
-                            }
-                        }
                         allRooms.Add(room);
                     }
                 }
             }
 
-            var tiles = allRooms.SelectMany(r => r.Tiles).ToList();
-            allRooms.ListRooms();
+            var mergedRooms = roomService.MergeAllRooms(allRooms);
 
-            return tiles;
+            return mergedRooms.SelectMany(r => r.Tiles).ToList();
         }
 
         // TODO: Refactor magic number to a meaningful variable
