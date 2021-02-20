@@ -10,21 +10,16 @@ namespace PDGToolkitCore.UnitTests
     [TestFixture]
     public class TileExtensionsTests
     {
-        private readonly List<Tile> tilesWithSharedPositions = new List<Tile>();
-        private readonly Position sharedPosition = new Position(0,0);
-        
-        [SetUp]
-        public void Init()
+        [Test]
+        public void TileExtensions_ReplacesTilesWithSharedPosition()
         {
+            var tilesWithSharedPositions = new List<Tile>();
+            var sharedPosition = new Position(0,0);
             for (var i = 0; i < 10; i++)
             {
                 tilesWithSharedPositions.Add(new Tile(TileType.Wall, sharedPosition));
             }
-        }
-
-        [Test]
-        public void TileExtensions_ReplacesTilesWithSharedPosition()
-        {
+            
             var replacement = new Tile(TileType.Floor, sharedPosition);
             
             tilesWithSharedPositions.ReplaceTilesWithOtherTile(replacement);
