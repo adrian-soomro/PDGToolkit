@@ -10,32 +10,23 @@ namespace PDGToolkitCore.Application
     {
         public bool AreRoomsOverlapping(Room firstRoom, Room secondRoom)
         {
-            var sharedFloorTiles = GetOverlappingFloorTiles(firstRoom, secondRoom);
+            var sharedFloorTiles = GetOverlappingTiles(firstRoom, secondRoom);
             return sharedFloorTiles.Count() > 1;
-        }
-        
-        private List<Tile> GetOverlappingFloorTiles(Room firstRoom, Room secondRoom)
-        {
-            var r1Tiles = firstRoom.Tiles;
-            var r2Tiles = secondRoom.Tiles;
-            
-            var overlappingTiles = r1Tiles.Intersect(r2Tiles).Where(t => t.Type.Equals(TileType.Floor)).ToList();
-            return overlappingTiles;
         }
         
         public Room MergeRooms(Room r1, Room r2)
         {
-            var allTiles = r1.Tiles.Concat(r2.Tiles).ToList();
-            allTiles = UncoverFloorTiles(allTiles);
-
             if (r1.Equals(r2)) 
                 throw new ArgumentException("Can't merge a room with itself!");
             
+            var allTiles = r1.Tiles.Concat(r2.Tiles).ToList();
+            allTiles = UncoverFloorTiles(allTiles);
+           
             var overlappingWalls = r2.Tiles.FindAll(t =>
             {
-                var sharedPositionsBetweenRooms = GetRoomsByPosition(new List<Room> {r1, r2}, t.Position);
+                var roomsWithSharedPosition = GetRoomsByPosition(new List<Room> {r1, r2}, t.Position);
                 
-                return sharedPositionsBetweenRooms.Contains(r1) && t.Type.Equals(TileType.Wall) && t.HasTwoAdjacentFloorTiles(allTiles);
+                return roomsWithSharedPosition.Contains(r1) && t.Type.Equals(TileType.Wall) && t.HasTwoAdjacentFloorTiles(allTiles);
             });
 
             foreach (var tile in overlappingWalls)
@@ -126,6 +117,14 @@ namespace PDGToolkitCore.Application
                 .Select(y => new { Element = y.Key, Count = y.Count()})
                 .ToDictionary(x => x.Element, y => y.Count);
         }
-
+        
+        private List<Tile> GetOverlappingTiles(Room firstRoom, Room secondRoom)
+        {
+            var r1Tiles = firstRoom.Tiles;
+            var r2Tiles = secondRoom.Tiles;
+            
+            var overlappingTiles = r1Tiles.Intersect(r2Tiles).ToList();
+            return overlappingTiles;
+        }
     }
 }
