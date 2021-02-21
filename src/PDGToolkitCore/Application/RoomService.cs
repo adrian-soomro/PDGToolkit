@@ -11,9 +11,11 @@ namespace PDGToolkitCore.Application
         public bool AreRoomsOverlapping(Room firstRoom, Room secondRoom)
         {
             var sharedTiles = GetOverlappingTiles(firstRoom, secondRoom);
-            return sharedTiles.Count() > 1;
+            var allTiles = firstRoom.Tiles.Concat(secondRoom.Tiles).ToList();
+            return sharedTiles.Count > 1 &&
+                   sharedTiles.Any(sharedTile => sharedTile.HasTwoAdjacentFloorTiles(allTiles));
         }
-        
+
         public Room MergeRooms(Room r1, Room r2)
         {
             if (r1.Equals(r2)) 
@@ -120,13 +122,15 @@ namespace PDGToolkitCore.Application
                 .ToDictionary(x => x.Element, y => y.Count);
         }
         
-        private List<Tile> GetOverlappingTiles(Room firstRoom, Room secondRoom)
+        private List<Tile> GetOverlappingTiles(Room r1, Room r2)
         {
-            var r1Tiles = firstRoom.Tiles;
-            var r2Tiles = secondRoom.Tiles;
+            var allTiles = r1.Tiles.Concat(r2.Tiles).ToList();
             
-            var overlappingTiles = r1Tiles.Intersect(r2Tiles).ToList();
-            return overlappingTiles;
+            var positionsOfTilesFromR1 = r1.Tiles.Select(t => t.Position);
+            var positionsOfTilesFromR2 = r2.Tiles.Select(t => t.Position);
+            
+            var overlappingTilePositions = positionsOfTilesFromR1.Intersect(positionsOfTilesFromR2).ToList();
+            return allTiles.FindAll(t => overlappingTilePositions.Contains(t.Position)).Distinct().ToList();
         }
     }
 }
