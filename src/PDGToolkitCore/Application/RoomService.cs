@@ -34,7 +34,10 @@ namespace PDGToolkitCore.Application
                 allTiles.ReplaceTilesWithOtherTile(new Tile(TileType.Floor, tile.Position));
             }
             
-            return new Room(0, 0, new Position(0, 0), allTiles, r1.Id);
+            r1.Tiles.Clear();
+            r1.Tiles.AddRange(allTiles);
+            
+            return r1;
         }
 
         public IEnumerable<Room> GetRoomsByPosition(IEnumerable<Room> rooms, Position position)
