@@ -11,7 +11,7 @@ namespace PDGToolkitCore.Application
         public bool AreRoomsOverlapping(Room firstRoom, Room secondRoom)
         {
             var sharedTiles = GetOverlappingTiles(firstRoom, secondRoom);
-            return sharedTiles.Count() > 0;
+            return sharedTiles.Count() > 1;
         }
         
         public Room MergeRooms(Room r1, Room r2)
