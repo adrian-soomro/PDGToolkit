@@ -69,6 +69,17 @@ namespace PDGToolkitCore.UnitTests
             newRoom.Id.Should().Be(rooms[0].Id);
             newRoom.Tiles.Count().Should().BeLessThan(rooms[0].Tiles.Count + rooms[1].Tiles.Count);
         }
+        
+        [Test]
+        public void MergingRooms_EqualityHolds()
+        {
+            var uniqueRooms = new HashSet<Room>{rooms[0], rooms[1]};
+            var newRoom = roomService.MergeRooms(rooms[0], rooms[1]);
+            
+            var insertSuccessful = uniqueRooms.Add(newRoom);
+
+            insertSuccessful.Should().BeFalse();
+        }
 
         [Test]
         public void OverlappingRooms_Return_True()

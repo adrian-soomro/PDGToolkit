@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PDGToolkitCore.Domain.Models
 {
-    public class Room
+    public class Room : IEquatable<Room>
     {
         public Guid Id { get; }
         public int Width { get; }
@@ -21,6 +21,26 @@ namespace PDGToolkitCore.Domain.Models
             Height = height;
             StartingPosition = startingPosition;
             Tiles = tiles;
+        }
+
+        public bool Equals(Room other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Id.Equals(other.Id);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Room) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
     }
 }
