@@ -16,5 +16,14 @@ namespace PDGToolkitCore.Infrastructure.DebugExtensions
                 Console.Out.WriteLine($"Room #{i+1} => Id: {rooms[i].Id}, around: {tile.Position.X}, {tile.Position.Y}");
             }
         }
+        
+        public static void ListRoomsStartingPosition(this IEnumerable<Room> allRooms)
+        {
+            var rooms = allRooms.ToList();
+            for (var i = 0; i < rooms.Count; i++)
+            {
+                Console.Out.WriteLine($"Room #{i+1} => Id: {rooms[i].Id}, around: {rooms[i].StartingPosition.X}, {rooms[i].StartingPosition.Y}");
+            }
+        }
     }
 }
