@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using PDGToolkitCore.Domain.Models;
 using PDGToolkitCore.Infrastructure;
-using PDGToolkitCore.Infrastructure.DebugExtensions;
 
 namespace PDGToolkitCore.Application
 {
@@ -23,7 +22,6 @@ namespace PDGToolkitCore.Application
         {
             var seed = Guid.NewGuid().GetHashCode();
             random = new Random(seed);
-            Console.Out.WriteLine($"Random seed for this run: {seed}");
             this.settings = settings;
             this.roomService = roomService;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;

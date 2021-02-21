@@ -55,47 +55,41 @@ namespace PDGToolkitCore.Application
             return foundRooms;
         }
 
+        /**
+         * Recursively keep trying to merge rooms given in <param name="rooms">rooms</param>,
+         * until no more merging can occur.
+         */
         public IEnumerable<Room> MergeAllRooms(IEnumerable<Room> rooms)
         {
-            var result = new HashSet<Room>();
             var allRooms = rooms.ToList();
+            var result = new HashSet<Room>();
             var depleted = new List<Room>();
-            var uniqueRoomPairs = allRooms.SelectMany((first, i) => allRooms.Skip(i + 1).Select(second => (first, second))).ToList();
+            
+            // source of inspiration: https://stackoverflow.com/questions/12666300/create-pairs-from-list-values
+            var uniqueRoomPairs = allRooms.SelectMany(
+                (first, i) => allRooms.Skip(i + 1).Select(second => (first, second))).ToList();
+            
             foreach (var (first, second) in uniqueRoomPairs)
             {
                 if (depleted.Contains(first) || depleted.Contains(second))
                     continue;
             
-                Console.Out.WriteLine($"Comparing room {allRooms.IndexOf(first) +1 }, and {allRooms.IndexOf(second) +1}");
                 if (AreRoomsOverlapping(first, second))
                 {
-                    Console.Out.WriteLine($"Merging room {allRooms.IndexOf(first) +1 }, and {allRooms.IndexOf(second) +1}");
                     result.Add(MergeRooms(first, second));
                     depleted.Add(first);
                     depleted.Add(second);
                     continue;
                 }
                 result.Add(first);
-                Console.Out.WriteLine($"Tried to add room #{allRooms.IndexOf(first) +1} to results, there are {result.Count()} elements in results atm");
-                foreach (var room in result)
-                {
-                    Console.Out.Write($"{room.Id}, ");
-                }
-                Console.Out.WriteLine("");
             }
 
             if (!depleted.Contains(allRooms.Last()))
-            {
                 result.Add(allRooms.Last());
-            }
-
-            Console.Out.WriteLine($"End of MergeAllRooms(), started with {rooms.Count()}, ended with {result.Count()}");
-
-            if (result.Count() != rooms.Count())
-            {
+            
+            if (result.Count != allRooms.Count)
                 return MergeAllRooms(result);
-            }
-
+            
             return result;
         }
 
