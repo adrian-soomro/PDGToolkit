@@ -129,7 +129,7 @@ namespace PDGToolkitCore.Application
             for (var i = 0; i < doorPermits; i++)
             {
                 var index = random.Next(uniqueWallTiles.Count);
-                uniqueWallTiles.Add(new Tile(TileType.Obstacle, new Position(uniqueWallTiles.ElementAt(index).Position.X, uniqueWallTiles.ElementAt(index).Position.Y)));
+                uniqueWallTiles.Add(new Tile(TileType.Door, new Position(uniqueWallTiles.ElementAt(index).Position.X, uniqueWallTiles.ElementAt(index).Position.Y)));
                 uniqueWallTiles.RemoveAt(index);
             }
             
