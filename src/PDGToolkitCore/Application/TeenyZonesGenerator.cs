@@ -53,10 +53,9 @@ namespace PDGToolkitCore.Application
         private async Task<List<Tile>> GenerateRooms(int wallThickness)
         {
             var allRooms = new List<Room>();
-            
-            for (var x = wallThickness; x < Width - wallThickness; x++)
+            for (var x = wallThickness; x < Width - wallThickness - MinimumRoomSize; x++)
             {
-                for (var y = wallThickness; y < Height - wallThickness; y++)
+                for (var y = wallThickness; y < Height - wallThickness - MinimumRoomSize; y++)
                 {
                     if (OneIn(OneInXChanceToGenerateARoom))
                     {
@@ -72,8 +71,8 @@ namespace PDGToolkitCore.Application
                     }
                 }
             }
-
-            var mergedRooms = roomService.MergeAllRooms(allRooms);
+            allRooms = roomService.TrimSpilledRooms(allRooms, Width - wallThickness, Height - wallThickness ).ToList();
+            var mergedRooms = roomService.MergeAllRooms(allRooms).ToList();
             roomService.CreateDoors(mergedRooms);
             return mergedRooms.SelectMany(r => r.Tiles).ToList();
         }

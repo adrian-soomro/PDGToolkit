@@ -112,6 +112,28 @@ namespace PDGToolkitCore.Application
 
             return allRooms;
         }
+        
+        /**
+         * Trims tiles that are spilling out of bounds (their X position is >= <param name="xThreshold">X threshold</param>
+         *  or Y position is >= <param name="yThreshold">Y threshold</param>) in all <param name="rooms">rooms</param>.
+         */
+        public IEnumerable<Room> TrimSpilledRooms(IEnumerable<Room> rooms, int xThreshold, int yThreshold)
+        {
+            var allRooms = rooms.ToList();
+            foreach (var room in allRooms)
+            {
+                var allTilesInThisRoom = room.Tiles.ToList();
+                var spillingTilePositions =
+                    allTilesInThisRoom.FindAll(t => t.Position.X >= xThreshold || t.Position.Y >= yThreshold)
+                        .Select(t => t.Position).ToList();
+                var cleanTiles = allTilesInThisRoom.FindAll(t => !spillingTilePositions.Contains(t.Position));
+                
+                room.Tiles.Clear();
+                room.Tiles.AddRange(cleanTiles);
+            }
+
+            return allRooms;
+        }
 
         private Room AllocateDoors(Room room)
         {
