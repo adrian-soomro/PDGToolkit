@@ -78,9 +78,11 @@ namespace PDGToolkitCore.Application
             return mergedRooms.SelectMany(r => r.Tiles).ToList();
         }
 
-        // TODO: Refactor magic number to a meaningful variable
-        private int SelectRoomWidth => RandomlySelectWallLength(Width / 4);
-        private int SelectRoomHeight => RandomlySelectWallLength(Height / 4);
+        private int MaximumRoomWidth => Width / 4;
+        private int MaximumRoomHeight => Height / 4;
+        
+        private int SelectRoomWidth => RandomlySelectWallLength(MaximumRoomWidth);
+        private int SelectRoomHeight => RandomlySelectWallLength(MaximumRoomHeight);
         
         private int RandomlySelectWallLength(int maxLength)
         {
