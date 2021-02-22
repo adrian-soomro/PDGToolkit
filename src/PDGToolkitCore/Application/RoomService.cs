@@ -8,6 +8,13 @@ namespace PDGToolkitCore.Application
 {
     internal class RoomService : IRoomService
     {
+        private Random random;
+
+        public RoomService(Random random)
+        {
+            this.random = random;
+        }
+
         public bool AreRoomsOverlapping(Room firstRoom, Room secondRoom)
         {
             var sharedTiles = GetOverlappingTiles(firstRoom, secondRoom);
@@ -77,6 +84,7 @@ namespace PDGToolkitCore.Application
                 if (AreRoomsOverlapping(first, second))
                 {
                     result.Add(MergeRooms(first, second));
+                    first.IncrementMergedRoomsCounter();
                     depleted.Add(first);
                     depleted.Add(second);
                     continue;
@@ -91,6 +99,46 @@ namespace PDGToolkitCore.Application
                 return MergeAllRooms(result);
             
             return result;
+        }
+
+        public IEnumerable<Room> CreateDoors(IEnumerable<Room> rooms)
+        {
+            var allRooms = rooms.ToList();
+
+            foreach (var room in allRooms)
+            {
+                AllocateDoors(room);
+            }
+
+            return allRooms;
+        }
+
+        private Room AllocateDoors(Room room)
+        {
+            var doorPermits = room.NumContainedRooms / 2 + 1;
+            
+            var allWallTiles  = room.Tiles.FindAll(t => t.Type.Equals(TileType.Wall)).ToList();
+            var allDuplicateWallTiles = room.Tiles.GroupBy(x => x)
+                .Where(g => g.Count() > 1)
+                .Select(y => y.Key)
+                .ToList();
+            var uniqueWallTiles = allWallTiles.Except(allDuplicateWallTiles).ToList();
+
+            var allRoomTilesWithoutUniqueWalls = room.Tiles.Except(uniqueWallTiles).ToList();
+            
+            for (var i = 0; i < doorPermits; i++)
+            {
+                var index = random.Next(uniqueWallTiles.Count);
+                uniqueWallTiles.Add(new Tile(TileType.Obstacle, new Position(uniqueWallTiles.ElementAt(index).Position.X, uniqueWallTiles.ElementAt(index).Position.Y)));
+                uniqueWallTiles.RemoveAt(index);
+            }
+            
+            var allRoomTiles = allRoomTilesWithoutUniqueWalls.Concat(uniqueWallTiles);
+            
+            room.Tiles.Clear();
+            room.Tiles.AddRange(allRoomTiles);
+            
+            return room;
         }
 
         /**

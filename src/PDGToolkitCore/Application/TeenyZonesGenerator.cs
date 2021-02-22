@@ -74,7 +74,7 @@ namespace PDGToolkitCore.Application
             }
 
             var mergedRooms = roomService.MergeAllRooms(allRooms);
-
+            roomService.CreateDoors(mergedRooms);
             return mergedRooms.SelectMany(r => r.Tiles).ToList();
         }
 

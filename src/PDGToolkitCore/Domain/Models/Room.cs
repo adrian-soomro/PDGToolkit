@@ -11,6 +11,11 @@ namespace PDGToolkitCore.Domain.Models
         public Position StartingPosition { get; }
         public List<Tile> Tiles { get; }
 
+        // Keeps count of how many rooms is this room composed of. # merges + 1 (the original room itself)
+        public int NumContainedRooms => numMergedRooms + 1;
+        
+        private int numMergedRooms = 0;
+
 
         public Room(int width, int height, Position startingPosition, List<Tile> tiles, Guid id = new Guid())
         {
@@ -41,6 +46,11 @@ namespace PDGToolkitCore.Domain.Models
         public override int GetHashCode()
         {
             return Id.GetHashCode();
+        }
+
+        public void IncrementMergedRoomsCounter()
+        {
+            numMergedRooms++;
         }
     }
 }
