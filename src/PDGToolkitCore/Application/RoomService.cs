@@ -104,10 +104,11 @@ namespace PDGToolkitCore.Application
         public IEnumerable<Room> CreateDoors(IEnumerable<Room> rooms)
         {
             var allRooms = rooms.ToList();
-
+            
             foreach (var room in allRooms)
             {
-                AllocateDoors(room);
+                var allTiles = rooms.SelectMany(r => r.Tiles).ToList();
+                AllocateDoors(room, allTiles);
             }
 
             return allRooms;
@@ -135,9 +136,9 @@ namespace PDGToolkitCore.Application
             return allRooms;
         }
 
-        private Room AllocateDoors(Room room)
+        private Room AllocateDoors(Room room, List<Tile> allTiles)
         {
-            var doorPermits = room.NumContainedRooms / 2 + 1;
+            var numberOfDoorsForThisRoom = room.NumContainedRooms / 2 + 1;
             
             var allWallTiles  = room.Tiles.FindAll(t => t.Type.Equals(TileType.Wall)).ToList();
             var allDuplicateWallTiles = room.Tiles.GroupBy(x => x)
@@ -147,20 +148,40 @@ namespace PDGToolkitCore.Application
             var uniqueWallTiles = allWallTiles.Except(allDuplicateWallTiles).ToList();
 
             var allRoomTilesWithoutUniqueWalls = room.Tiles.Except(uniqueWallTiles).ToList();
+
+            var wallTilesWithDoors = ReplaceWallsWithDoorsWherePossible(numberOfDoorsForThisRoom, uniqueWallTiles, allTiles);
             
-            for (var i = 0; i < doorPermits; i++)
-            {
-                var index = random.Next(uniqueWallTiles.Count);
-                uniqueWallTiles.Add(new Tile(TileType.Door, new Position(uniqueWallTiles.ElementAt(index).Position.X, uniqueWallTiles.ElementAt(index).Position.Y)));
-                uniqueWallTiles.RemoveAt(index);
-            }
-            
-            var allRoomTiles = allRoomTilesWithoutUniqueWalls.Concat(uniqueWallTiles);
+            var allRoomTiles = allRoomTilesWithoutUniqueWalls.Concat(wallTilesWithDoors);
             
             room.Tiles.Clear();
             room.Tiles.AddRange(allRoomTiles);
             
             return room;
+        }
+
+        private List<Tile> ReplaceWallsWithDoorsWherePossible(int numberOfDoorsToPlace, List<Tile> uniqueWallTiles, List<Tile> allTiles)
+        {
+            while (numberOfDoorsToPlace != 0)
+            {
+                var index = random.Next(uniqueWallTiles.Count);
+                var randomlyChosenWallTile = uniqueWallTiles.ElementAt(index);
+
+                if (IsTileAValidDoorLocation(randomlyChosenWallTile, allTiles))
+                {
+                    uniqueWallTiles.Add(new Tile(TileType.Door, new Position(uniqueWallTiles.ElementAt(index).Position.X, uniqueWallTiles.ElementAt(index).Position.Y)));
+                    uniqueWallTiles.RemoveAt(index);
+                    numberOfDoorsToPlace--;
+                }
+
+            }
+
+            return uniqueWallTiles;
+        }
+
+        private bool IsTileAValidDoorLocation(Tile tile, IEnumerable<Tile> tiles)
+        {
+            var allTiles = tiles.ToList();
+            return tile.HasMaxTwoAdjacentWallTiles(allTiles);
         }
 
         /**

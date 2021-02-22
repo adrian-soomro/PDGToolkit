@@ -19,10 +19,10 @@ namespace PDGToolkitCore.Application.Extensions
             {
                 tiles.Remove(tile);
             }
-            
+
             tiles.Add(replacement);
         }
-        
+
         public static bool HasTwoAdjacentFloorTiles(this Tile tile, List<Tile> allTiles)
         {
             var up = new Position(tile.Position.X, tile.Position.Y + 1);
@@ -33,8 +33,26 @@ namespace PDGToolkitCore.Application.Extensions
                 t.Position.Equals(up) || t.Position.Equals(down) || t.Position.Equals(left) ||
                 t.Position.Equals(right));
 
-            var adjacentFloorPositions = adjacentFloorTiles.Select(a => a.Position).ToList(); 
-            return adjacentFloorPositions.Contains(up) && adjacentFloorPositions.Contains(down) || adjacentFloorPositions.Contains(right) && adjacentFloorPositions.Contains(left);
+            var adjacentFloorPositions = adjacentFloorTiles.Select(a => a.Position).ToList();
+            return adjacentFloorPositions.Contains(up) && adjacentFloorPositions.Contains(down) ||
+                   adjacentFloorPositions.Contains(right) && adjacentFloorPositions.Contains(left);
+        }
+
+        public static bool HasMaxTwoAdjacentWallTiles(this Tile tile, List<Tile> allTiles)
+        {
+            var up = new Position(tile.Position.X, tile.Position.Y + 1);
+            var down = new Position(tile.Position.X, tile.Position.Y - 1);
+            var left = new Position(tile.Position.X - 1, tile.Position.Y);
+            var right = new Position(tile.Position.X + 1, tile.Position.Y);
+            var adjacentWallTiles = allTiles.Where(t => t.Type.Equals(TileType.Wall)).ToList().FindAll(t =>
+                t.Position.Equals(up) || t.Position.Equals(down) || t.Position.Equals(left) ||
+                t.Position.Equals(right));
+
+            var adjacentWallPositions = adjacentWallTiles.Select(a => a.Position).ToList();
+
+            return adjacentWallPositions.Count == 2 &&
+                   (adjacentWallPositions.Contains(up) && adjacentWallPositions.Contains(down) ||
+                    adjacentWallPositions.Contains(left) && adjacentWallPositions.Contains(right));
         }
     }
 }

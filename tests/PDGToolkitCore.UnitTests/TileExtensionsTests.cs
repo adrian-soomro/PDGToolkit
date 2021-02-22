@@ -139,5 +139,55 @@ namespace PDGToolkitCore.UnitTests
             var result = aWallTile.HasTwoAdjacentFloorTiles(allTiles);
             result.Should().BeTrue();
         }
+        
+        [Test] public void TileExtensions_HasMaxTwoAdjacentWallTiles()
+        {
+            /* Given a set of tiles with positions
+            like so:    012 x
+            0            W
+            1           FWF
+            2            W
+            y
+            where F = Floor tile, W = Wall tile
+             */
+            var allTiles = new List<Tile>
+            {
+                new Tile(TileType.Wall, new Position(1,0)),
+                new Tile(TileType.Floor, new Position(0,1)),
+                new Tile(TileType.Wall, new Position(1,1)),
+                new Tile(TileType.Floor, new Position(2,1)),
+                new Tile(TileType.Wall, new Position(1,2))
+            };
+            
+            var aWallTile = new Tile(TileType.Wall, new Position(1,1));
+
+            var result = aWallTile.HasMaxTwoAdjacentWallTiles(allTiles);
+            result.Should().BeTrue();
+        }
+        
+        [Test] public void TileExtensions_DoesNotHaveMaxTwoAdjacentWallTiles()
+        {
+            /* Given a set of tiles with positions
+            like so:    012 x
+            0            W
+            1           FWF
+            2            F
+            y
+            where F = Floor tile, W = Wall tile
+             */
+            var allTiles = new List<Tile>
+            {
+                new Tile(TileType.Wall, new Position(1,0)),
+                new Tile(TileType.Floor, new Position(0,1)),
+                new Tile(TileType.Wall, new Position(1,1)),
+                new Tile(TileType.Floor, new Position(2,1)),
+                new Tile(TileType.Floor, new Position(1,2))
+            };
+            
+            var aWallTile = new Tile(TileType.Wall, new Position(1,1));
+
+            var result = aWallTile.HasMaxTwoAdjacentWallTiles(allTiles);
+            result.Should().BeFalse();
+        }
     }
 }
