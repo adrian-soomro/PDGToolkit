@@ -12,7 +12,7 @@ namespace PDGToolkitCore.UnitTests
     [TestFixture]
     public class RoomServiceTests
     {
-        private readonly IRoomService roomService = new RoomService();
+        private readonly IRoomService roomService = new RoomService(new Random());
         private List<Room> rooms;
 
         [SetUp]

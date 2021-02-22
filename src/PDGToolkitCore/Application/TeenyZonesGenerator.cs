@@ -18,12 +18,11 @@ namespace PDGToolkitCore.Application
         private int Width { get; }
         private int Height { get; }
         
-        public TeenyZonesGenerator(Settings settings, IRoomService roomService)
+        public TeenyZonesGenerator(Settings settings, IRoomService roomService, Random random)
         {
-            var seed = Guid.NewGuid().GetHashCode();
-            random = new Random(seed);
             this.settings = settings;
             this.roomService = roomService;
+            this.random = random;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;
             Height = settings.GridSettings.Height / settings.TileSettings.Size;
         }

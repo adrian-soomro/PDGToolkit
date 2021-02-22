@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PDGToolkitCore.API;
 using PDGToolkitCore.API.Serialisers;
@@ -21,6 +22,8 @@ namespace PDGToolkitCore.Infrastructure
         
         private static IServiceCollection ConfigureServices()
         {
+            var seed = Guid.NewGuid().GetHashCode();
+            Console.Out.WriteLine($"The seed used for this run: {seed}");
             var services = new ServiceCollection();
             services.AddSingleton(InitialiseSettings());
             services.AddTransient<IGenerator, RandomGenerator>();
@@ -29,7 +32,7 @@ namespace PDGToolkitCore.Infrastructure
             services.AddTransient<IFileWriter, FileWriter>();
             services.AddSingleton<IRunner, Runner>();
             services.AddTransient<IRoomService, RoomService>();
-            
+            services.AddSingleton(new Random(seed));
             return services;
         }
 
