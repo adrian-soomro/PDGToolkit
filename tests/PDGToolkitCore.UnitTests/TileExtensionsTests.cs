@@ -189,5 +189,27 @@ namespace PDGToolkitCore.UnitTests
             var result = aWallTile.HasMaxTwoAdjacentWallTiles(allTiles);
             result.Should().BeFalse();
         }
+
+        [Test]
+        public void TileExtensions_TileIsInsideBounds()
+        {
+            var allTiles = TileBuilder.Create()
+                .WithHorizontalLineOfFloorsStartingAtPosition(5, new Position(1, 1)).Build();
+            
+            var result = allTiles.First().IsOutsideBounds(0,10,0,10);
+            
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void TileExtensions_TileIsOutsideBounds()
+        {
+            var allTiles = TileBuilder.Create()
+                .WithHorizontalLineOfFloorsStartingAtPosition(5, new Position(0, 0)).Build();
+            
+            var result = allTiles.First().IsOutsideBounds(0,10,0,10);
+            
+            result.Should().BeTrue();
+        }
     }
 }

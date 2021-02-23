@@ -54,5 +54,11 @@ namespace PDGToolkitCore.Application.Extensions
                    (adjacentWallPositions.Contains(up) && adjacentWallPositions.Contains(down) ||
                     adjacentWallPositions.Contains(left) && adjacentWallPositions.Contains(right));
         }
+
+        public static bool IsOutsideBounds(this Tile tile, int minX, int maxX, int minY, int maxY)
+        {
+            return tile.Position.X <= minX || tile.Position.X >= maxX ||
+                      tile.Position.Y <= minY || tile.Position.Y >= maxY;
+        }
     }
 }

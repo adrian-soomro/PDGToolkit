@@ -172,7 +172,6 @@ namespace PDGToolkitCore.Application
                     uniqueWallTiles.RemoveAt(index);
                     numberOfDoorsToPlace--;
                 }
-
             }
 
             return uniqueWallTiles;
