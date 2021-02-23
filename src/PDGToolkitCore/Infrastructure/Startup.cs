@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PDGToolkitCore.API;
 using PDGToolkitCore.API.Serialisers;
 using PDGToolkitCore.Application;
+using PDGToolkitCore.Application.PathFinding;
 
 namespace PDGToolkitCore.Infrastructure
 {
@@ -32,6 +33,7 @@ namespace PDGToolkitCore.Infrastructure
             services.AddTransient<IFileWriter, FileWriter>();
             services.AddSingleton<IRunner, Runner>();
             services.AddTransient<IRoomService, RoomService>();
+            services.AddTransient<IPathFindingService, AStarPathFindingService>();
             services.AddSingleton(new Random(seed));
             return services;
         }

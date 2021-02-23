@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PDGToolkitCore.Application.PathFinding;
 using PDGToolkitCore.Domain.Models;
 using PDGToolkitCore.Infrastructure;
 
@@ -12,17 +13,19 @@ namespace PDGToolkitCore.Application
         private readonly Settings settings;
         private readonly Random random;
         private readonly IRoomService roomService;
+        private readonly IPathFindingService pathFindingService;
         private const int MinimumRoomSize = 4;
         private const int OneInXChanceToGenerateARoom = 600;
 
         private int Width { get; }
         private int Height { get; }
         
-        public TeenyZonesGenerator(Settings settings, IRoomService roomService, Random random)
+        public TeenyZonesGenerator(Settings settings, IRoomService roomService, Random random, IPathFindingService pathFindingService)
         {
             this.settings = settings;
             this.roomService = roomService;
             this.random = random;
+            this.pathFindingService = pathFindingService;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;
             Height = settings.GridSettings.Height / settings.TileSettings.Size;
         }
@@ -74,9 +77,10 @@ namespace PDGToolkitCore.Application
             allRooms = roomService.TrimSpilledRooms(allRooms, Width - wallThickness, Height - wallThickness ).ToList();
             var mergedRooms = roomService.MergeAllRooms(allRooms).ToList();
             roomService.CreateDoors(mergedRooms);
-            return mergedRooms.SelectMany(r => r.Tiles).ToList();
+            var hallways = pathFindingService.ConstructAllPaths(mergedRooms, Width - wallThickness, Height - wallThickness);
+            return mergedRooms.SelectMany(r => r.Tiles).Concat(hallways).ToList();
         }
-
+        
         private int MaximumRoomWidth => Width / 4;
         private int MaximumRoomHeight => Height / 4;
         
