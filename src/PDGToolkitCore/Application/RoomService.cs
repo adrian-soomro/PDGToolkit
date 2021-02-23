@@ -188,7 +188,8 @@ namespace PDGToolkitCore.Application
         private bool IsTileAValidDoorLocation(Tile tile, IEnumerable<Tile> tiles)
         {
             var allTiles = tiles.ToList();
-            return tile.HasMaxTwoAdjacentWallTiles(allTiles);
+            return tile.HasMaxTwoAdjacentWallTiles(allTiles) && !tile.IsOutsideBounds(doorPositionBoundary.MinX, doorPositionBoundary.MaxX,
+                doorPositionBoundary.MinY, doorPositionBoundary.MaxY);;
         }
 
         /**
