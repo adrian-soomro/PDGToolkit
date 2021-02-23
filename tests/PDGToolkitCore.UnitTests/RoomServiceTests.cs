@@ -3,21 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using PDGToolkitCore.Application;
 using PDGToolkitCore.Domain.Models;
+using PDGToolkitCore.Infrastructure;
 
 namespace PDGToolkitCore.UnitTests
 {
     [TestFixture]
     public class RoomServiceTests
     {
-        private readonly IRoomService roomService = new RoomService(new Random());
+        private IRoomService roomService;
         private List<Room> rooms;
-
+        
         [SetUp]
         public async Task Init()
         {
+          // mock settings with an in-memory configuration
+            var inMemorySettings = new Dictionary<string, string> {
+                {"outputRelativePath", "foo"},
+                {"grid:width", "1280"},
+                {"grid:height", "720"},
+                {"tiles:size", "720"},
+            };
+
+            IConfiguration configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+            
+            roomService = new RoomService(new Random(), new Settings(configuration));
+            
             var room1 = await RoomBuilder.Create().WithHeight(10).WithWidth(10).WithStartingPosition(new Position(0, 0))
                 .WithInsideTilesOfType(TileType.Floor).WithOutsideWalls().BuildAsync();
             

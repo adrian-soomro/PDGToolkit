@@ -3,16 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using PDGToolkitCore.Application.Extensions;
 using PDGToolkitCore.Domain.Models;
+using PDGToolkitCore.Infrastructure;
 
 namespace PDGToolkitCore.Application
 {
     internal class RoomService : IRoomService
     {
-        private Random random;
-
-        public RoomService(Random random)
+        private readonly Random random;
+        private readonly Boundary outsideDungeonBoundary;
+        private readonly Boundary doorPositionBoundary;
+        
+        public RoomService(Random random, Settings settings)
         {
             this.random = random;
+            var dungeonWidth = settings.GridSettings.Width / settings.TileSettings.Size;
+            var dungeonHeight = settings.GridSettings.Height / settings.TileSettings.Size;
+            const int wallThickness = 1;
+            outsideDungeonBoundary = new Boundary(0, dungeonWidth - wallThickness, 0, dungeonHeight - wallThickness);
+            doorPositionBoundary = new Boundary(1, dungeonWidth - 2 * wallThickness, 1 , dungeonHeight - 2 * wallThickness);
         }
 
         public bool AreRoomsOverlapping(Room firstRoom, Room secondRoom)
@@ -118,14 +126,14 @@ namespace PDGToolkitCore.Application
          * Trims tiles that are spilling out of bounds (their X position is >= <param name="xThreshold">X threshold</param>
          *  or Y position is >= <param name="yThreshold">Y threshold</param>) in all <param name="rooms">rooms</param>.
          */
-        public IEnumerable<Room> TrimSpilledRooms(IEnumerable<Room> rooms, int xThreshold, int yThreshold)
+        public IEnumerable<Room> TrimSpilledRooms(IEnumerable<Room> rooms)
         {
             var allRooms = rooms.ToList();
             foreach (var room in allRooms)
             {
                 var allTilesInThisRoom = room.Tiles.ToList();
                 var spillingTilePositions =
-                    allTilesInThisRoom.FindAll(t => t.Position.X >= xThreshold || t.Position.Y >= yThreshold)
+                    allTilesInThisRoom.FindAll(t => t.Position.X >= outsideDungeonBoundary.MaxX || t.Position.Y >= outsideDungeonBoundary.MaxY)
                         .Select(t => t.Position).ToList();
                 var cleanTiles = allTilesInThisRoom.FindAll(t => !spillingTilePositions.Contains(t.Position));
                 
@@ -215,6 +223,26 @@ namespace PDGToolkitCore.Application
             
             var overlappingTilePositions = positionsOfTilesFromR1.Intersect(positionsOfTilesFromR2).ToList();
             return allTiles.FindAll(t => overlappingTilePositions.Contains(t.Position)).Distinct().ToList();
+        }
+
+        /**
+         * Represents positional boundaries that need to be respected when placing / manipulating certain tiles
+         * by <see cref="RoomService"/>.
+         */
+        private class Boundary
+        {
+            public int MinX { get; }
+            public int MaxX { get; }
+            public int MinY { get; }
+            public int MaxY { get; }
+
+            public Boundary(int minX, int maxX, int minY, int maxY)
+            {
+                MinX = minX;
+                MaxX = maxX;
+                MinY = minY;
+                MaxY = maxY;
+            }
         }
     }
 }
