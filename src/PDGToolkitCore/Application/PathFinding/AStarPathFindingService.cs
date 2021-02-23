@@ -6,22 +6,44 @@ using PDGToolkitCore.Domain.Models.Pathfinding;
 
 namespace PDGToolkitCore.Application.PathFinding
 {
+    /**
+     * Adaptation of https://dotnetcoretutorials.com/2020/07/25/a-search-pathfinding-algorithm-in-c/
+     */
     public class AStarPathFindingService : IPathFindingService
     {
+        private readonly Random random;
+
+        public AStarPathFindingService(Random random)
+        {
+            this.random = random;
+        }
+
         public IEnumerable<Tile> ConstructAllPaths(IEnumerable<Room> rooms, int xThreshold, int yThreshold)
         {
             var allRooms = rooms.ToList();
             var allTiles = allRooms.SelectMany(r => r.Tiles).ToList();
             var result = new List<Tile>();
-            
-            var startTile = allRooms[0].Tiles.First(t => t.Type.Equals(TileType.Door));
-            var finishTile = allRooms[^1].Tiles.First(t => t.Type.Equals(TileType.Door));
-            
-            result.AddRange(FindPath(startTile, finishTile, allTiles, xThreshold, yThreshold));
+           
+            var depletedRooms = new List<Room>();
 
+            foreach (var room in allRooms)
+            {
+                depletedRooms.Add(room);
+                var availableRooms = allRooms.FindAll(r => !depletedRooms.Contains(r));
+                if (availableRooms.Any())
+                {
+                    var index = random.Next(availableRooms.Count);
+                    var roomToConnectTo = availableRooms.ElementAt(index);
+
+                    var start = GetDoor(room);
+                    var finish = GetDoor(roomToConnectTo);
+                    result.AddRange(FindPath(start, finish, allTiles, xThreshold, yThreshold));
+                }
+            }
+            
             return result;
         }
-        
+
         public IEnumerable<Tile> FindPath(Tile startTile, Tile finishTile, IEnumerable<Tile> tiles, int xThreshold, int yThreshold)
         {
             var start = new WeightedTile(startTile);
@@ -40,10 +62,8 @@ namespace PDGToolkitCore.Application.PathFinding
 
                 if (checkTile.Position.Equals(finish.Position))
                 {
-                    Console.Out.WriteLine($"Path found between ({start.Position.X}, {start.Position.Y}) and ({finish.Position.X}, {finish.Position.Y})");
                     var lastTile = checkTile;
                     var path = new List<WeightedTile>();
-                    Console.Out.WriteLine($"Retracing steps backwards...");
                     while (lastTile != null)
                     {
                         path.Add(lastTile);
@@ -75,7 +95,6 @@ namespace PDGToolkitCore.Application.PathFinding
                     }
                 }
             }
-            Console.Out.WriteLine($"No path found between ({start.Position.X}, {start.Position.Y}) and ({finish.Position.X}, {finish.Position.Y})");
             return new List<Tile>();
         }
 
@@ -97,6 +116,11 @@ namespace PDGToolkitCore.Application.PathFinding
                 var tileAtPos = allTiles.FirstOrDefault(tile => tile.Position.Equals(weightedTile.Position));
                 return  weightedTile.Position.X < xThreshold && weightedTile.Position.Y < yThreshold && (tileAtPos.IsEmpty() || tileAtPos.IsWalkable());
             }).ToList();
+        }
+        
+        private Tile GetDoor(Room room)
+        {
+            return room.Tiles.First(t => t.Type.Equals(TileType.Door));
         }
     }
 }
