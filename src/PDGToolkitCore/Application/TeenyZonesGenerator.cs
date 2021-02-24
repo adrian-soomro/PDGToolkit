@@ -77,7 +77,7 @@ namespace PDGToolkitCore.Application
             allRooms = roomService.TrimSpilledRooms(allRooms).ToList();
             var mergedRooms = roomService.MergeAllRooms(allRooms).ToList();
             roomService.CreateDoors(mergedRooms);
-            var hallways = pathFindingService.ConstructAllPaths(mergedRooms, Width - wallThickness, Height - wallThickness);
+            var hallways = pathFindingService.ConstructAllPaths(mergedRooms);
             return mergedRooms.SelectMany(r => r.Tiles).Concat(hallways).ToList();
         }
         

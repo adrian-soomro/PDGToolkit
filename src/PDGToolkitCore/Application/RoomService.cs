@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using PDGToolkitCore.Application.Extensions;
+using PDGToolkitCore.Domain;
 using PDGToolkitCore.Domain.Models;
 using PDGToolkitCore.Infrastructure;
 
@@ -115,7 +116,7 @@ namespace PDGToolkitCore.Application
             
             foreach (var room in allRooms)
             {
-                var allTiles = rooms.SelectMany(r => r.Tiles).ToList();
+                var allTiles = allRooms.SelectMany(r => r.Tiles).ToList();
                 AllocateDoors(room, allTiles);
             }
 
@@ -123,8 +124,8 @@ namespace PDGToolkitCore.Application
         }
         
         /**
-         * Trims tiles that are spilling out of bounds (their X position is >= <param name="xThreshold">X threshold</param>
-         *  or Y position is >= <param name="yThreshold">Y threshold</param>) in all <param name="rooms">rooms</param>.
+         * Trims tiles that are spilling out of bounds <see cref="outsideDungeonBoundary"/>
+         *  in all <param name="rooms">rooms</param>.
          */
         public IEnumerable<Room> TrimSpilledRooms(IEnumerable<Room> rooms)
         {
@@ -224,26 +225,6 @@ namespace PDGToolkitCore.Application
             
             var overlappingTilePositions = positionsOfTilesFromR1.Intersect(positionsOfTilesFromR2).ToList();
             return allTiles.FindAll(t => overlappingTilePositions.Contains(t.Position)).Distinct().ToList();
-        }
-
-        /**
-         * Represents positional boundaries that need to be respected when placing / manipulating certain tiles
-         * by <see cref="RoomService"/>.
-         */
-        private class Boundary
-        {
-            public int MinX { get; }
-            public int MaxX { get; }
-            public int MinY { get; }
-            public int MaxY { get; }
-
-            public Boundary(int minX, int maxX, int minY, int maxY)
-            {
-                MinX = minX;
-                MaxX = maxX;
-                MinY = minY;
-                MaxY = maxY;
-            }
         }
     }
 }
