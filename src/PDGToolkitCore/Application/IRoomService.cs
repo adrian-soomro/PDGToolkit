@@ -16,5 +16,7 @@ namespace PDGToolkitCore.Application
         IEnumerable<Room> CreateDoors(IEnumerable<Room> rooms);
         
         IEnumerable<Room> TrimSpilledRooms(IEnumerable<Room> rooms);
+
+        public IEnumerable<Tile> UncoverDoorTiles(IEnumerable<Tile> tiles);
     }
 }

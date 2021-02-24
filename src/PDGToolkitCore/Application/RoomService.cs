@@ -208,6 +208,23 @@ namespace PDGToolkitCore.Application
             return tiles;
         }
         
+        public IEnumerable<Tile> UncoverDoorTiles(IEnumerable<Tile> tiles)
+        {
+            var allTiles = tiles.ToList();
+            var allDoorTiles = allTiles.FindAll(t => t.Type.Equals(TileType.Door));
+            foreach (var doorTile in allDoorTiles)
+            {
+                if (doorTile.HasTwoAdjacentFloorTiles(allTiles))
+                {
+                    allTiles.ReplaceTilesWithOtherTile(doorTile);
+                    continue;
+                } 
+                allTiles.ReplaceTilesWithOtherTile(new Tile(TileType.Wall, doorTile.Position));
+            }
+
+            return allTiles;
+        }
+        
         private Dictionary<Position, int> GetPositionsOfDuplicateTiles(List<Tile> tiles)
         {
             return tiles.GroupBy(t => t.Position)

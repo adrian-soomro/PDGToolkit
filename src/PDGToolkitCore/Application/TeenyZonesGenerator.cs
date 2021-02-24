@@ -78,7 +78,8 @@ namespace PDGToolkitCore.Application
             var mergedRooms = roomService.MergeAllRooms(allRooms).ToList();
             roomService.CreateDoors(mergedRooms);
             var hallways = pathFindingService.ConstructAllPaths(mergedRooms);
-            return mergedRooms.SelectMany(r => r.Tiles).Concat(hallways).ToList();
+            
+            return roomService.UncoverDoorTiles(mergedRooms.SelectMany(r => r.Tiles).Concat(hallways)).ToList();
         }
         
         private int MaximumRoomWidth => Width / 4;
