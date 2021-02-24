@@ -32,7 +32,7 @@ namespace PDGToolkitCore.UnitTests
                 .AddInMemoryCollection(inMemorySettings)
                 .Build();
             
-            roomService = new RoomService(new Random(), new Settings(configuration));
+            roomService = new RoomService(new Settings(configuration));
             
             var room1 = await RoomBuilder.Create().WithHeight(10).WithWidth(10).WithStartingPosition(new Position(0, 0))
                 .WithInsideTilesOfType(TileType.Floor).WithOutsideWalls().BuildAsync();

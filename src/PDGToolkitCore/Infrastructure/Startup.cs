@@ -34,6 +34,7 @@ namespace PDGToolkitCore.Infrastructure
             services.AddSingleton<IRunner, Runner>();
             services.AddTransient<IRoomService, RoomService>();
             services.AddTransient<IPathFindingService, AStarPathFindingService>();
+            services.AddTransient<IHallwayService, HallwayService>();
             services.AddSingleton(new Random(seed));
             return services;
         }

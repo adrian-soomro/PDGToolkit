@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PDGToolkitCore.Application.PathFinding;
 using PDGToolkitCore.Domain.Models;
 using PDGToolkitCore.Infrastructure;
 
@@ -13,19 +12,19 @@ namespace PDGToolkitCore.Application
         private readonly Settings settings;
         private readonly Random random;
         private readonly IRoomService roomService;
-        private readonly IPathFindingService pathFindingService;
+        private readonly IHallwayService hallwayService;
         private const int MinimumRoomSize = 4;
         private const int OneInXChanceToGenerateARoom = 600;
 
         private int Width { get; }
         private int Height { get; }
         
-        public TeenyZonesGenerator(Settings settings, IRoomService roomService, Random random, IPathFindingService pathFindingService)
+        public TeenyZonesGenerator(Settings settings, Random random, IRoomService roomService, IHallwayService hallwayService)
         {
             this.settings = settings;
-            this.roomService = roomService;
             this.random = random;
-            this.pathFindingService = pathFindingService;
+            this.roomService = roomService;
+            this.hallwayService = hallwayService;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;
             Height = settings.GridSettings.Height / settings.TileSettings.Size;
         }
@@ -76,10 +75,10 @@ namespace PDGToolkitCore.Application
             }
             allRooms = roomService.TrimSpilledRooms(allRooms).ToList();
             var mergedRooms = roomService.MergeAllRooms(allRooms).ToList();
-            roomService.CreateDoors(mergedRooms);
-            var hallways = pathFindingService.ConstructAllPaths(mergedRooms);
+            mergedRooms = hallwayService.CreateDoors(mergedRooms).ToList();
+            var hallways = hallwayService.CreateHallways(mergedRooms);
             
-            return roomService.UncoverDoorTiles(mergedRooms.SelectMany(r => r.Tiles).Concat(hallways)).ToList();
+            return hallwayService.HandleDoorTiles(mergedRooms.SelectMany(r => r.Tiles).Concat(hallways)).ToList();
         }
         
         private int MaximumRoomWidth => Width / 4;
