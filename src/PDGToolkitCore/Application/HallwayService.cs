@@ -105,7 +105,8 @@ namespace PDGToolkitCore.Application
 
             var allRoomTilesWithoutUniqueWalls = room.Tiles.Except(uniqueWallTiles).ToList();
 
-            var wallTilesWithDoors = ReplaceWallsWithDoorsWherePossible(numberOfDoorsForThisRoom, uniqueWallTiles, allTiles);
+            var allTilesWithoutDupes = allTiles.Distinct().ToList();
+            var wallTilesWithDoors = ReplaceWallsWithDoorsWherePossible(numberOfDoorsForThisRoom, uniqueWallTiles, allTilesWithoutDupes);
             
             var allRoomTiles = allRoomTilesWithoutUniqueWalls.Concat(wallTilesWithDoors);
             

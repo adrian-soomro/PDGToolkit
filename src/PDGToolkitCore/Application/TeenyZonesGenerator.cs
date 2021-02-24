@@ -13,7 +13,7 @@ namespace PDGToolkitCore.Application
         private readonly Random random;
         private readonly IRoomService roomService;
         private readonly IHallwayService hallwayService;
-        private const int MinimumRoomSize = 4;
+        private const int MinimumRoomSize = 3;
         private const int OneInXChanceToGenerateARoom = 600;
 
         private int Width { get; }
