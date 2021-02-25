@@ -94,7 +94,7 @@ namespace PDGToolkitCore.Application
         
         private Room AllocateDoors(Room room, List<Tile> allTiles)
         {
-            var numberOfDoorsForThisRoom = room.NumContainedRooms / 2 + 1;
+            var numberOfDoorsForThisRoom = room.NumContainedRooms / 2 + 4;
             
             var allWallTiles  = room.Tiles.FindAll(t => t.Type.Equals(TileType.Wall)).ToList();
             var allDuplicateWallTiles = room.Tiles.GroupBy(x => x)
