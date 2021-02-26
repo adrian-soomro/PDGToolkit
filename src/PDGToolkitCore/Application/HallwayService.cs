@@ -96,13 +96,11 @@ namespace PDGToolkitCore.Application
         {
             var numberOfDoorsForThisRoom = room.NumContainedRooms / 2 + 4;
             
-            var allWallTiles  = room.Tiles.FindAll(t => t.Type.Equals(TileType.Wall)).ToList();
-            var allDuplicateWallTiles = room.Tiles.GroupBy(x => x)
-                .Where(g => g.Count() > 1)
+            var uniqueWallTiles = room.Tiles.GroupBy(x => x)
+                .Where(g => g.Count() == 1)
                 .Select(y => y.Key)
-                .ToList();
-            var uniqueWallTiles = allWallTiles.Except(allDuplicateWallTiles).ToList();
-
+                .Where(t => t.Type.Equals(TileType.Wall)).ToList();
+            
             var allRoomTilesWithoutUniqueWalls = room.Tiles.Except(uniqueWallTiles).ToList();
 
             var allTilesWithoutDupes = allTiles.Distinct().ToList();
