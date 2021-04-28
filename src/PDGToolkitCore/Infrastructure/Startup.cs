@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PDGToolkitCore.API;
 using PDGToolkitCore.API.Serialisers;
 using PDGToolkitCore.Application;
+using PDGToolkitCore.Application.PathFinding;
 
 namespace PDGToolkitCore.Infrastructure
 {
@@ -21,6 +23,8 @@ namespace PDGToolkitCore.Infrastructure
         
         private static IServiceCollection ConfigureServices()
         {
+            var seed = Guid.NewGuid().GetHashCode();
+            Console.Out.WriteLine($"The seed used for this run: {seed}");
             var services = new ServiceCollection();
             services.AddSingleton(InitialiseSettings());
             services.AddTransient<IGenerator, RandomGenerator>();
@@ -28,8 +32,10 @@ namespace PDGToolkitCore.Infrastructure
             services.AddTransient<ISerialiser, JsonSerialiser>();
             services.AddTransient<IFileWriter, FileWriter>();
             services.AddSingleton<IRunner, Runner>();
-            services.AddTransient<ITileService, TileService>();
-            
+            services.AddTransient<IRoomService, RoomService>();
+            services.AddTransient<IPathFindingService, AStarPathFindingService>();
+            services.AddTransient<IHallwayService, HallwayService>();
+            services.AddSingleton(new Random(seed));
             return services;
         }
 

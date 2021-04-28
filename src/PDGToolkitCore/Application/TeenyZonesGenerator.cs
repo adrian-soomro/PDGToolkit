@@ -1,26 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using PDGToolkitCore.Domain.Models;
 using PDGToolkitCore.Infrastructure;
 
 namespace PDGToolkitCore.Application
 {
-    public class TeenyZonesGenerator : IGenerator
+    internal class TeenyZonesGenerator : IGenerator
     {
         private readonly Settings settings;
-        private readonly Random random = new Random();
-        private readonly ITileService tileService;
+        private readonly Random random;
+        private readonly IRoomService roomService;
+        private readonly IHallwayService hallwayService;
         private const int MinimumRoomSize = 3;
         private const int OneInXChanceToGenerateARoom = 600;
 
         private int Width { get; }
         private int Height { get; }
         
-        public TeenyZonesGenerator(Settings settings, ITileService tileService)
+        public TeenyZonesGenerator(Settings settings, Random random, IRoomService roomService, IHallwayService hallwayService)
         {
             this.settings = settings;
-            this.tileService = tileService;
+            this.random = random;
+            this.roomService = roomService;
+            this.hallwayService = hallwayService;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;
             Height = settings.GridSettings.Height / settings.TileSettings.Size;
         }
@@ -37,7 +41,7 @@ namespace PDGToolkitCore.Application
                 .WithInsideTiles(wallThickness => GenerateRooms(wallThickness))
                 .WithOutsideWalls()
                 .BuildAsync();
-            
+          
             return new Grid(settings.GridSettings.Height, settings.GridSettings.Width,
                 new TileConfig(settings.TileSettings.Size), room.Tiles);
         }
@@ -50,10 +54,10 @@ namespace PDGToolkitCore.Application
          */
         private async Task<List<Tile>> GenerateRooms(int wallThickness)
         {
-            var tiles = new List<Tile>();
-            for (var x = wallThickness; x < Width - wallThickness; x++)
+            var allRooms = new List<Room>();
+            for (var x = wallThickness; x < Width - wallThickness - MinimumRoomSize; x++)
             {
-                for (var y = wallThickness; y < Height - wallThickness; y++)
+                for (var y = wallThickness; y < Height - wallThickness - MinimumRoomSize; y++)
                 {
                     if (OneIn(OneInXChanceToGenerateARoom))
                     {
@@ -64,19 +68,26 @@ namespace PDGToolkitCore.Application
                             .WithOutsideWalls()
                             .WithInsideTilesOfType(TileType.Floor)
                             .BuildAsync();
-                    
-                        tiles.AddRange(room.Tiles);
+
+                        allRooms.Add(room);
                     }
                 }
             }
-
-            tiles = tileService.RemoveOverlappingDuplicateWalls(tiles);
-            return tileService.RemoveSharedWalls(tiles);
+            allRooms = roomService.TrimSpilledRooms(allRooms).ToList();
+            var mergedRooms = roomService.MergeAllRooms(allRooms).ToList();
+            mergedRooms = hallwayService.CreateDoors(mergedRooms).ToList();
+            var hallways = hallwayService.CreateHallways(mergedRooms);
+            
+            var allTiles = hallwayService.HandleDoorTiles(mergedRooms.SelectMany(r => r.Tiles).Concat(hallways)).ToList();
+            allTiles = allTiles.Distinct().ToList();
+            return allTiles;
         }
-
-        // TODO: Refactor magic number to a meaningful variable
-        private int SelectRoomWidth => RandomlySelectWallLength(Width / 4);
-        private int SelectRoomHeight => RandomlySelectWallLength(Height / 4);
+        
+        private int MaximumRoomWidth => Width / 4;
+        private int MaximumRoomHeight => Height / 4;
+        
+        private int SelectRoomWidth => RandomlySelectWallLength(MaximumRoomWidth);
+        private int SelectRoomHeight => RandomlySelectWallLength(MaximumRoomHeight);
         
         private int RandomlySelectWallLength(int maxLength)
         {
