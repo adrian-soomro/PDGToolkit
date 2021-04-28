@@ -2,6 +2,9 @@
 
 namespace PDGToolkitCore.Domain.Models.Pathfinding
 {
+    /**
+     * A wrapper used to add some information needed for A-start algorithm to the Tile class 
+     */
     public class WeightedTile
     {
         public Position Position { get; set; }

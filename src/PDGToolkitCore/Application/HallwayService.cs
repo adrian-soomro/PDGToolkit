@@ -44,7 +44,6 @@ namespace PDGToolkitCore.Application
             var allRooms = rooms.ToList();
             var allTiles = allRooms.SelectMany(r => r.Tiles).ToList();
             var result = new List<Tile>();
-           
             var depletedRooms = new List<Room>();
 
             foreach (var room in allRooms)
@@ -163,7 +162,5 @@ namespace PDGToolkitCore.Application
         {
             return room.Tiles.First(t => t.Type.Equals(TileType.Door));
         }
-        
-        
     }
 }
