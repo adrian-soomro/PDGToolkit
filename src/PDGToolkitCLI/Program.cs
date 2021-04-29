@@ -21,7 +21,7 @@ namespace PDGToolkitCLI
         
         [Option("-p|--path", Description = @"Relative path to where the output file should be stored, 
                                                       including the file's name. Relative to the solution root.")]        
-        public string PathToOutputFile { get; } = "dungeon.json";
+        public string PathToOutputFile { get; } = "dungeon";
         
         [Option("-w|--width", Description = @"Sets the width of the generated dungeon.")]
         [Range(1, int.MaxValue)]
