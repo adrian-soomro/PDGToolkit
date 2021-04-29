@@ -1,9 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using PDGToolkitCLI.Validation;
-using PDGToolkitCore.API;
 using PDGToolkitCore.Infrastructure;
 
 namespace PDGToolkitCLI
@@ -17,8 +15,12 @@ namespace PDGToolkitCLI
         [IsValidGeneratorName]
         public string Generator { get; } = "TeenyZonesGenerator";
         
+        [Option(Description = "The serialiser to use")]
+        [IsValidSerialiserName]
+        public string Serialiser { get; } = "JsonSerialiser";
+        
         [Option("-p|--path", Description = @"Relative path to where the output file should be stored, 
-                                                      including the file's name. Relative to the solution root.")]
+                                                      including the file's name. Relative to the solution root.")]        
         public string PathToOutputFile { get; } = "dungeon.json";
         
         [Option("-w|--width", Description = @"Sets the width of the generated dungeon.")]
@@ -28,26 +30,18 @@ namespace PDGToolkitCLI
         [Option("--height", Description = @"Sets the height of the generated dungeon.")]
         [Range(1, int.MaxValue)]
         public int DungeonHeight { get; } = 720;
-
-        [Option("-l|--list", Description = @"Lists all generators in the toolkit.")]
-        public bool ListGenerators { get; } = false;
         
         private async Task OnExecuteAsync()
         {
-            if (ListGenerators)
-            {
-                var generators = GeneratorService.GetAllGenerators();
-                await ResponseFormatter.RespondWithCollectionAsync("Currently available generators are:", generators);
-                Environment.Exit(0);
-            }
-
             CustomSettingsHandler.Create()
+                .SetGenerator(Generator)
                 .SetRelativePath(PathToOutputFile)
                 .SetWidth(DungeonWidth)
                 .SetHeight(DungeonHeight)
+                .SetSerialiser(Serialiser)
                 .PersistChanges();
 
-            var runner = Startup.InitialiseRunner(Generator);
+            var runner = Startup.InitialiseRunner();
             await runner.Run();
         }
     }

@@ -10,15 +10,19 @@ namespace PDGToolkitCore.Infrastructure
 {
     public static class Startup
     {
-        public static IRunner InitialiseRunner(string generatorName)
+        public static IRunner InitialiseRunner()
         {
             var services = ConfigureServices();
             var serviceProvider = services.BuildServiceProvider();
-            var generators = serviceProvider.GetServices<IGenerator>();
-
-            var selectedGenerator = GeneratorLoader.LoadGenerator(generators, generatorName);
+            var settings = (Settings) serviceProvider.GetService(typeof(Settings));
             
-            return new Runner(selectedGenerator, serviceProvider.GetService<ISerialiser>(),serviceProvider.GetService<IFileWriter>());
+            var generators = serviceProvider.GetServices<IGenerator>();
+            var serialisers = serviceProvider.GetServices<ISerialiser>();
+
+            var selectedGenerator = InternalComponentLoader.LoadGenerator(generators, settings.Generator);
+            var selectedSerialiser = InternalComponentLoader.LoadSerialiser(serialisers, settings.Serialiser);
+            
+            return new Runner(selectedGenerator, selectedSerialiser, serviceProvider.GetService<IFileWriter>());
         }
         
         private static IServiceCollection ConfigureServices()
@@ -30,6 +34,7 @@ namespace PDGToolkitCore.Infrastructure
             services.AddTransient<IGenerator, RandomGenerator>();
             services.AddTransient<IGenerator, TeenyZonesGenerator>();
             services.AddTransient<ISerialiser, JsonSerialiser>();
+            services.AddTransient<ISerialiser, YamlSerialiser>();
             services.AddTransient<IFileWriter, FileWriter>();
             services.AddSingleton<IRunner, Runner>();
             services.AddTransient<IRoomService, RoomService>();
