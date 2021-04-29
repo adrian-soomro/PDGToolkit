@@ -20,7 +20,10 @@ namespace PDGToolkitCore.Infrastructure
             Generator = config.GetValue<string>("generator");
             Serialiser = config.GetValue<string>("serialiser");
         }
-
+        
+        /**
+         * Ensures that the relative path to output contains the right extension, based on the serialiser used.
+         */
         private string SetRelativePathToOutput(IConfiguration config)
         {
             var fullFileName = config.GetValue<string>("outputRelativePath");
