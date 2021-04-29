@@ -6,5 +6,7 @@
     "tiles" : {
         "size" : 10
     },
-    "outputRelativePath" : "dungeon.json"
+    "outputRelativePath" : "dungeon",
+    "generator" : "TeenyZonesGenerator",
+    "serialiser" : "JsonSerialiser"
 }

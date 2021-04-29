@@ -41,6 +41,18 @@ namespace PDGToolkitCLI
             return this;
         }
 
+        public CustomSettingsHandler SetSerialiser(string serialiser)
+        {
+            settings["serialiser"] = serialiser;
+            return this;
+        }
+        
+        public CustomSettingsHandler SetGenerator(string generator)
+        {
+            settings["generator"] = generator;
+            return this;
+        }
+        
         public void PersistChanges()
         {
             string output = Newtonsoft.Json.JsonConvert.SerializeObject(settings, Newtonsoft.Json.Formatting.Indented);

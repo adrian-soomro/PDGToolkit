@@ -26,6 +26,8 @@ namespace PDGToolkitCore.UnitTests
                 {"grid:width", "1280"},
                 {"grid:height", "720"},
                 {"tiles:size", "720"},
+                {"generator", "TeenyZonesGenerator"},
+                {"serialiser", "JsonSerialiser"}
             };
 
             IConfiguration configuration = new ConfigurationBuilder()

@@ -14,5 +14,17 @@ namespace PDGToolkitCLI
                 await Console.Out.WriteLineAsync($"- {element}");
             }
         }
+
+        public static string RespondWithCollection(string initialMessage, IEnumerable<string> collection)
+        {
+            var message = initialMessage;
+            foreach (var element in collection)
+            {
+                message += Environment.NewLine;
+                message += $"- {element}";
+            }
+
+            return message;
+        }
     }
 }
