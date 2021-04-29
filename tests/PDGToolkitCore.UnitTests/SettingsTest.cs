@@ -16,7 +16,7 @@ namespace PDGToolkitCore.UnitTests
         {
           // mock settings with an in-memory configuration
             var inMemorySettings = new Dictionary<string, string> {
-                {"outputRelativePath", "outputfile"},
+                {"outputRelativePath", "outputfile.extension"},
                 {"serialiser", "testSerialiser"}
             };
 
@@ -35,7 +35,8 @@ namespace PDGToolkitCore.UnitTests
         [Test]
         public void Settings_DeducesFileExtensionFromSerialiserUsed_Fails()
         {
-            settings.RelativePathToOutput.Should().NotBe("outputfile.t");
+            settings.RelativePathToOutput.Should().NotBe("outputfile.extension.test");
+            settings.RelativePathToOutput.Should().NotBe("outputfile.test.extension");
         }
     }
 }

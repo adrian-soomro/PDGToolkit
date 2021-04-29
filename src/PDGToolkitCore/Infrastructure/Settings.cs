@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Text.RegularExpressions;
+using Microsoft.Extensions.Configuration;
 
 namespace PDGToolkitCore.Infrastructure
 {
@@ -21,7 +23,9 @@ namespace PDGToolkitCore.Infrastructure
 
         private string SetRelativePathToOutput(IConfiguration config)
         {
-            var fileName = config.GetValue<string>("outputRelativePath");
+            var fullFileName = config.GetValue<string>("outputRelativePath");
+            Regex matcher = new Regex(@"(\w+)");
+            var fileName = matcher.Match(fullFileName).Groups[1].Value;
             var serialiser = config.GetValue<string>("serialiser");
             var serialiserPrefix = serialiser.Replace("Serialiser", "").ToLower();
             return $"{fileName}.{serialiserPrefix}";
