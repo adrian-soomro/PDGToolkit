@@ -26,4 +26,4 @@ cd "$rootDir"
 ls $rootDir
 
 # cleanup
-Remove-Job -Job $canvas
+Remove-Job -Job $canvas -Force
