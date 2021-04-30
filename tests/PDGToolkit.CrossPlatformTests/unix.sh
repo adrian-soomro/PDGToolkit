@@ -10,11 +10,11 @@ cd ./out
 
 ls
 
-./PDGToolkitCLI -h
+dotnet PDGToolkitCLI.dll -h
 echo "####"
 
 # run the toolkit
-./PDGToolkitCLI
+dotnet PDGToolkitCLI.dll
 
 #echo "[ ] should've finished the execution, taking a nap."
 #sleep 30
