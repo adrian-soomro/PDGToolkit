@@ -14,7 +14,7 @@ dotnet PDGToolkitCLI.dll -h
 echo "####"
 
 # run the toolkit
-dotnet PDGToolkitCLI.dll -p 'PDGToolkit/dungeon'
+dotnet PDGToolkitCLI.dll -p 'dungeon'
 
 #echo "[ ] should've finished the execution, taking a nap."
 #sleep 30
