@@ -22,7 +22,8 @@ mv ../dungeon.json ./dungeon.json
 cd ./src/PDGCanvas/
 npm run start &
 canvasPID=$!
-
+echo "Starting up canvas ($canvasPID), giving it a minute to start up"
+sleep 60
 cd "$rootDir"
 
 os=$(uname -s)
