@@ -8,23 +8,45 @@ jobs:
   linux-test:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [14.x]
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.301
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
     - name: run the toolkit
       run: bash tests/PDGToolkit.CrossPlatformTests/unix.sh
+
 
   mac-test:
     runs-on: macos-latest
 
+    strategy:
+      matrix:
+        node-version: [14.x]
+        
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.301
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}      
+    - run: npm install
+    
     - name: run the toolkit
       run: bash tests/PDGToolkit.CrossPlatformTests/unix.sh

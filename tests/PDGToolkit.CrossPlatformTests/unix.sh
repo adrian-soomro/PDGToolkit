@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# go to the root of the repo
-
+rootDir=$PWD
 
 # build the toolkit
 dotnet publish ./src/PDGToolkitCLI/PDGToolkitCLI.csproj -c Debug --output ./out
@@ -14,22 +13,22 @@ dotnet PDGToolkitCLI.dll -h
 echo "####"
 
 # run the toolkit
-dotnet PDGToolkitCLI.dll -p 'dungeon'
+dotnet PDGToolkitCLI.dll
 
-#echo "[ ] should've finished the execution, taking a nap."
-#sleep 30
-
-echo "### PDGToolkit/out###"
-ls
+cd "$rootDir"
+mv ../dungeon.json ./dungeon.json
 
 
-echo "### PDGToolkit###"
-ls ../
-echo "### PDGToolkit/PDGToolkit###"
-ls ../..
+cd ./src/PDGCanvas/
+npm run start &
+canvasPID=$!
 
-echo "### ../PDGToolkit/PDGToolkit###"
-ls ../../..
+cd "$rootDir"
 
-#cat ../dungeon.json
-# if dungeon.json exists, spin up canvas, load the page, fetch the image and persist it.
+os=$(uname -s)
+bash ./tests/PDGToolkit.CrossPlatformTests/saveDungeon.sh $os
+
+ls $rootDir
+
+# cleanup
+kill $canvasPID
