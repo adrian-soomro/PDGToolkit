@@ -12,19 +12,24 @@ ls
 
 ./PDGToolkitCLI -h
 echo "####"
+
 # run the toolkit
 ./PDGToolkitCLI
 
-echo "[ ] should've finished the execution, taking a nap."
-sleep 30
+#echo "[ ] should've finished the execution, taking a nap."
+#sleep 30
 
+echo "### PDGToolkit/out###"
 ls
 
-echo "####"
 
+echo "### PDGToolkit###"
 ls ../
+echo "### PDGToolkit/PDGToolkit###"
+ls ../..
 
-echo "###"
+echo "### ../PDGToolkit/PDGToolkit###"
+ls ../../..
 
-cat ../dungeon.json
+#cat ../dungeon.json
 # if dungeon.json exists, spin up canvas, load the page, fetch the image and persist it.
