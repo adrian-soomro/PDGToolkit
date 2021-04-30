@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # go to the root of the repo
-cd ../../
+#cd ../../
+ls
 
 # build the toolkit
 dotnet publish ./src/PDGToolkitCLI/PDGToolkitCLI.csproj -c Debug --output ./out
