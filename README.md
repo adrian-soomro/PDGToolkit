@@ -20,9 +20,9 @@ From the root of this repository:
    ```sh
    dotnet publish ./src/PDGToolkitCLI/PDGToolkitCLI.csproj -c Debug --output <YOUR-PATH>
    ```
-2. Run the CLI executable from `<YOUR-PATH>`
+2. From `<YOUR-PATH>`, use the runtime to run the CLI
     ```sh
-    ./PDGToolkitCLI
+    dotnet PDGToolkitCLI.dll
     ```
 
 **Note: The CLI takes additional options, to view them, add the '--help' flag while executing the CLI**
