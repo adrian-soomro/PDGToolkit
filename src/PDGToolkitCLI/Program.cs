@@ -42,7 +42,12 @@ namespace PDGToolkitCLI
                 .SetHeight(DungeonHeight)
                 .SetSerialiser(Serialiser)
                 .PersistChanges();
+
+            var widthValidator = new DungeonDimensionValidator("Width", DungeonWidth, InitialSettings.TileSettings.Size);
+            var heightValidator = new DungeonDimensionValidator("Height", DungeonHeight, InitialSettings.TileSettings.Size);
    
+            widthValidator.Validate();
+            heightValidator.Validate();
             var runner = Startup.InitialiseRunner();
             await runner.Run();
         }
