@@ -13,8 +13,9 @@ namespace PDGToolkitCore.Application
         private readonly Random random;
         private readonly IRoomService roomService;
         private readonly IHallwayService hallwayService;
-        private const int MinimumRoomSize = 3;
-        private const int OneInXChanceToGenerateARoom = 600;
+        private const int MinimumRoomSize = 5;
+        private const float LuckRatio = 15.36f;
+        private readonly int oneInXChanceToGenerateARoom;
 
         private int Width { get; }
         private int Height { get; }
@@ -27,6 +28,7 @@ namespace PDGToolkitCore.Application
             this.hallwayService = hallwayService;
             Width = settings.GridSettings.Width / settings.TileSettings.Size;
             Height = settings.GridSettings.Height / settings.TileSettings.Size;
+            oneInXChanceToGenerateARoom = CalculateOneInXChance();
         }
 
         /**
@@ -47,7 +49,7 @@ namespace PDGToolkitCore.Application
         }
 
         /**
-         * Select random points in the room using the <see cref="OneInXChanceToGenerateARoom"/> function,
+         * Select random points in the room using the <see cref="oneInXChanceToGenerateARoom"/> function,
          * then create new, smaller rooms of varying size <see cref="SelectRoomWidth"/> & <see cref="SelectRoomHeight"/>
          * and lastly, use <see cref="ITileService"/> to remove merge overlapping rooms into one bigger, more naturally
          * looking room.
@@ -59,7 +61,7 @@ namespace PDGToolkitCore.Application
             {
                 for (var y = wallThickness; y < Height - wallThickness - MinimumRoomSize; y++)
                 {
-                    if (OneIn(OneInXChanceToGenerateARoom))
+                    if (OneIn(oneInXChanceToGenerateARoom))
                     {
                         var room = await RoomBuilder.Create()
                             .WithWidth(SelectRoomWidth)
@@ -92,6 +94,16 @@ namespace PDGToolkitCore.Application
         private int RandomlySelectWallLength(int maxLength)
         {
             return random.Next(MinimumRoomSize, maxLength);
+        }
+        
+        /**
+         * Calculate the one in X chance to spawn a room to be proportional to the size of the dungeon
+         */
+        private int CalculateOneInXChance()
+        {
+            var tileSize = settings.TileSettings.Size;
+            var heightTimesWidth = (settings.GridSettings.Height / tileSize) * (settings.GridSettings.Width / tileSize);
+            return Convert.ToInt32(heightTimesWidth / LuckRatio);
         }
 
         /**
