@@ -115,7 +115,7 @@ namespace PDGToolkitCore.Application
             var allRooms = rooms.ToList();
             foreach (var room in allRooms)
             {
-                var allTilesInThisRoom = room.Tiles.ToList();
+                var allTilesInThisRoom = room.Tiles;
                 var spillingTilePositions =
                     allTilesInThisRoom.FindAll(t => t.Position.X >= outsideDungeonBoundary.MaxX || t.Position.Y >= outsideDungeonBoundary.MaxY)
                         .Select(t => t.Position).ToList();
