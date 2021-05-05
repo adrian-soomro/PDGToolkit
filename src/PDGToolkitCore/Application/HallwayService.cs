@@ -115,19 +115,32 @@ namespace PDGToolkitCore.Application
         
         private List<Tile> ReplaceWallsWithDoorsWherePossible(int numberOfDoorsToPlace, List<Tile> uniqueWallTiles, List<Tile> allTiles)
         {
-            while (numberOfDoorsToPlace != 0)
+            var suitableDoorLocations = new List<Tile>();
+            
+            foreach (var wallTile in uniqueWallTiles)
             {
-                var index = random.Next(uniqueWallTiles.Count);
-                var randomlyChosenWallTile = uniqueWallTiles.ElementAt(index);
-
-                if (IsTileAValidDoorLocation(randomlyChosenWallTile, allTiles))
+                if (IsTileAValidDoorLocation(wallTile, allTiles))
                 {
-                    uniqueWallTiles.Add(new Tile(TileType.Door, new Position(uniqueWallTiles.ElementAt(index).Position.X, uniqueWallTiles.ElementAt(index).Position.Y)));
-                    uniqueWallTiles.RemoveAt(index);
-                    numberOfDoorsToPlace--;
-                }
+                    suitableDoorLocations.Add(wallTile);
+                } 
             }
 
+            var maxNumDoorsToPlace = suitableDoorLocations.Count >= numberOfDoorsToPlace
+                ? numberOfDoorsToPlace
+                : suitableDoorLocations.Count;
+            
+            // shuffle the suitable door locations
+            suitableDoorLocations = suitableDoorLocations.OrderBy(t => random.Next()).ToList();
+            
+            for (var i = 0; i < maxNumDoorsToPlace; i++)
+            {
+                var selectedWallTile = suitableDoorLocations.ElementAt(i);
+                uniqueWallTiles.Remove(selectedWallTile);
+                
+                uniqueWallTiles.Add(new Tile(TileType.Door,
+                    new Position(selectedWallTile.Position.X, selectedWallTile.Position.Y)));
+            }
+            
             return uniqueWallTiles;
         }
         
